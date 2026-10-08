@@ -17,11 +17,16 @@ No framework and no dependencies. Plain HTML, CSS and a little JavaScript, gener
 ## Run it
 
 ```bash
-npm run dev      # build + serve at http://localhost:8080
-npm run build    # build into ./public
+npm run dev              # build + serve at http://localhost:8080
+npm run build            # build into ./public (for a web host)
+npm run build:portable   # build into ./portable (opens without a server)
 ```
 
 Needs Node 18+.
+
+### Preview without a server
+
+`npm run build:portable` writes a copy with relative links into `portable/`. Open `portable/index.html` by double-clicking it and browse the whole site straight from your computer. The folder can also be zipped and sent to someone, or uploaded under any sub-folder of a host.
 
 ## Edit content
 
