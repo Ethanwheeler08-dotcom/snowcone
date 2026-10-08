@@ -27,26 +27,35 @@ const pages = {
   'index.html': home(),
   'about/index.html': about(),
   'services/index.html': servicesIndex(),
-  '404.html': notFound(),
   ...Object.fromEntries(services.map((s) => [`services/${s.slug}/index.html`, service(s)])),
 };
+// A host serves 404.html at whatever URL was missing, so it needs root-relative
+// links and only belongs in the hosted build.
+if (!portable) pages['404.html'] = notFound();
 
 // Rewrites root-relative links ("/about/", "/assets/x.css") so they resolve from
 // `file` without a web server: relative to the page, with folder links pointing
 // at their index.html.
 const relativize = (html, file) => {
   const depth = file.split('/').length - 1;
-  return html.replace(/(href|src)="\/(?!\/)([^"#]*)(#[^"]*)?"/g, (_, attr, path, hash = '') => {
+  return html.replace(/(?<![\w-])(href|src)="\/(?!\/)([^"?#]*)([?#][^"]*)?"/g, (_, attr, path, rest = '') => {
     const target = path === '' || path.endsWith('/') ? `${path}index.html` : path;
-    if (target === file && hash) return `${attr}="${hash}"`;
-    return `${attr}="${'../'.repeat(depth)}${target}${hash}"`;
+    if (target === file && rest.startsWith('#')) return `${attr}="${rest}"`;
+    return `${attr}="${'../'.repeat(depth)}${target}${rest}"`;
   });
 };
+// Anything relativize() doesn't handle (srcset, poster, action, url(), single
+// quotes) would break the portable build, so refuse to write it.
+const rootRelative = /(?<![\w-])(href|src|srcset|poster|action)=["']\/(?!\/)|url\(\s*["']?\/(?!\/)/i;
 
 for (const [file, html] of Object.entries(pages)) {
   const path = join(out, file);
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, portable ? relativize(html, file) : html);
+  const output = portable ? relativize(html, file) : html;
+  if (portable && rootRelative.test(output)) {
+    throw new Error(`${file} still has a root-relative link after --portable: ${output.match(rootRelative)[0]}…`);
+  }
+  writeFileSync(path, output);
 }
 
 const base = site.url.replace(/\/$/, '');
@@ -67,7 +76,7 @@ const todos = readFileSync('src/config.mjs', 'utf8')
   .map((line, i) => [i + 1, line])
   .filter(([, line]) => /\/\/ TODO/.test(line));
 if (todos.length) {
-  console.log(`\n${todos.length} placeholder(s) left in src/config.mjs:`);
+  console.log(`\n${todos.length} item(s) to confirm in src/config.mjs:`);
   for (const [n, line] of todos) console.log(`  line ${n}: ${line.trim().slice(0, 100)}`);
 }
 if (site.draft) console.log('\nsite.draft is true, so pages show a "Draft preview" ribbon.');

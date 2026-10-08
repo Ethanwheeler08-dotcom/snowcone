@@ -1,4 +1,4 @@
-import { site, reviews } from './config.mjs';
+import { site, reviews, promises, team } from './config.mjs';
 import { services } from './data/services.mjs';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -28,6 +28,11 @@ export const icons = {
   web: (s = 22) => svg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M6.5 6.8h.01M9 6.8h.01"/>', { size: s }),
   mail: (s = 22) => svg('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>', { size: s }),
   strategy: (s = 22) => svg('<path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/>', { size: s }),
+  // Industry icons
+  wrench: (s = 22) => svg('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/>', { size: s }),
+  scale: (s = 22) => svg('<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>', { size: s }),
+  pulse: (s = 22) => svg('<path d="M3 12h4l2-5 4 10 2-5h6"/>', { size: s }),
+  briefcase: (s = 22) => svg('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>', { size: s }),
 };
 
 // Inline brand mark: a snowcone (scoop + cone) in the accent colours.
@@ -54,17 +59,32 @@ export const auditButton = (variant = 'accent', extra = '') => button('Book My G
 
 export const stars = '<span class="stars" aria-label="5 out of 5 stars">★★★★★</span>';
 
-export const ratingBadge = (variant = 'dark') => `
-  <a class="rating rating--${variant}" href="${site.rating.url}"${linkAttrs(site.rating.url)}>
+// Google rating badge. Without a real score it renders nothing, or with
+// `fallback` the site badge text (used in the hero).
+export const ratingBadge = (variant = 'dark', { fallback = false } = {}) => {
+  if (site.rating.score)
+    return `
+  <a class="rating rating--${variant}" href="${site.rating.url || '#'}"${linkAttrs(site.rating.url)}>
     <span class="rating__top">${icons.google(16)}${stars}</span>
     <span class="rating__text">${site.rating.score} ${site.rating.label}</span>
   </a>`;
+  return fallback && site.badge
+    ? `<a class="badge" href="${site.bookingUrl}"${linkAttrs(site.bookingUrl)}><span class="badge__dot" aria-hidden="true"></span>${site.badge}</a>`
+    : '';
+};
 
-// Image slot: shows the image if a src is given, otherwise a branded placeholder.
-export const media = (src, label, cls = '') =>
+// Image slot: shows the photo if a src is given, otherwise decorative brand art
+// (shaved-ice gradients with the snowcone mark, or `icon` if one is passed).
+export const media = (src, label, cls = '', icon = '') =>
   src
     ? `<div class="media ${cls}"><img src="${src}" alt="${label}" loading="lazy"></div>`
-    : `<div class="media media--ph ${cls}" role="img" aria-label="${label}"><span class="media__ph">${logoMark(44)}<span>${label}</span></span></div>`;
+    : `<div class="media media--art ${cls}" aria-hidden="true"><span class="media__art">${icon ? icons[icon](72) : logoMark(72)}</span></div>`;
+
+// Big-number list used by the home results card and the service pages.
+export const statList = (items, cls = '') => `
+      <dl class="stats ${cls}">
+        ${items.map((s) => `<div class="stat"><dt class="stat__value"${s.count ? ' data-count' : ''}>${s.value}</dt><dd>${s.label}</dd></div>`).join('')}
+      </dl>`;
 
 export const sectionHead = (eyebrow, title, extra = '') => `
   <div class="section-head reveal">
@@ -75,21 +95,9 @@ export const sectionHead = (eyebrow, title, extra = '') => `
 
 // ── Shared sections ──────────────────────────────────────────────────────────
 
-export const reviewsSection = ({ id = 'reviews' } = {}) => `
-<section class="section reviews" id="${id}">
-  <div class="container">
-    <div class="center-head reveal">
-      ${ratingBadge('light')}
-      <h2 class="h2 h2--xl">Did Someone Order Extra Syrup On That <em>ROI?</em></h2>
-      <p class="lead">Don’t take our word for it. Here’s what happens when ambitious founders meet a growth partner who actually delivers.</p>
-      ${auditButton('blue')}
-    </div>
-  </div>
-  <div class="slider" data-slider>
-    <div class="slider__track container" data-track>
-      ${reviews
-        .map(
-          (r) => `
+// Real Google reviews when there are some; until then, Snowcone's promises
+// in the same card layout.
+const reviewCard = (r) => `
       <article class="review-card">
         <div class="review-card__top">${stars}${icons.google()}</div>
         <p class="review-card__text">${r.text}</p>
@@ -97,13 +105,42 @@ export const reviewsSection = ({ id = 'reviews' } = {}) => `
           <span class="avatar" aria-hidden="true">${r.name.trim()[0]}</span>
           <span><strong>${r.name}</strong><small>${r.when}</small></span>
         </div>
-      </article>`,
-        )
-        .join('')}
+      </article>`;
+
+const promiseCard = (text) => `
+      <article class="review-card review-card--promise">
+        <div class="review-card__top">${logoMark(28)}</div>
+        <p class="review-card__text">${text}</p>
+        <div class="review-card__by">
+          <span class="avatar" aria-hidden="true">S</span>
+          <span><strong>The Snowcone Promise</strong><small>To every client, from day one</small></span>
+        </div>
+      </article>`;
+
+export const reviewsSection = ({ id = 'reviews' } = {}) => {
+  const hasReviews = reviews.length > 0;
+  return `
+<section class="section reviews" id="${id}">
+  <div class="container">
+    <div class="center-head reveal">
+      ${hasReviews ? ratingBadge('light') : ''}
+      <h2 class="h2 h2--xl">Did Someone Order Extra Syrup On That <em>ROI?</em></h2>
+      <p class="lead">${
+        hasReviews
+          ? 'Don’t take our word for it. Here’s what happens when ambitious founders meet a growth partner who actually delivers.'
+          : 'Good marketing should feel like a treat, not a gamble. Here’s the deal we make with every client.'
+      }</p>
+      ${auditButton('primary')}
     </div>
-    ${sliderControls('reviews')}
+  </div>
+  <div class="slider" data-slider>
+    <div class="slider__track container" data-track>
+      ${hasReviews ? reviews.map(reviewCard).join('') : promises.map(promiseCard).join('')}
+    </div>
+    ${sliderControls(hasReviews ? 'reviews' : 'promises')}
   </div>
 </section>`;
+};
 
 export const sliderControls = (noun = '') => `
     <div class="slider__controls container">
@@ -134,9 +171,9 @@ export const personalitySection = ({ text, eyebrow = 'About Us', id = 'about' })
     <div class="split split--media">
       <div class="prose reveal">
         ${text}
-        ${button('Meet Our Team', '/about/', 'ink')}
+        ${button(team.length ? 'Meet Our Team' : 'Get To Know Us', '/about/', 'ink')}
       </div>
-      ${media('', 'Team photo', 'reveal media--wide')}
+      ${media('', 'The Snowcone team', 'reveal media--wide')}
     </div>
   </div>
 </section>`;
@@ -191,6 +228,8 @@ const header = (path) => `
   </div>
 </header>`;
 
+const socials = site.socials.filter((s) => s.url);
+
 const footer = () => `
 <footer class="footer">
   <div class="container">
@@ -206,17 +245,30 @@ const footer = () => `
         </div>
         <div>
           <h2 class="footer__h">Contact Us</h2>
-          <p class="footer__label">Location</p>
-          <p><a href="${site.address.mapUrl}" target="_blank" rel="noopener">${site.address.text}</a></p>
+          ${
+            site.address.text
+              ? `<p class="footer__label">Location</p>
+          <p>${site.address.mapUrl ? `<a href="${site.address.mapUrl}" target="_blank" rel="noopener">${site.address.text}</a>` : site.address.text}</p>`
+              : `<p class="footer__label">Where</p>
+          <p>${site.serviceArea}</p>`
+          }
           <p class="footer__label">Email</p>
           <p><a href="mailto:${site.email}">${site.email}</a></p>
+          ${site.phone ? `<p class="footer__label">Phone</p>\n          <p><a href="tel:${site.phone.replace(/\s/g, '')}">${site.phone}</a></p>` : ''}
         </div>
-        <div>
+        ${
+          socials.length
+            ? `<div>
           <h2 class="footer__h">Connect With Us</h2>
-          <ul class="footer__social">${site.socials
+          <ul class="footer__social">${socials
             .map((s) => `<li><a href="${s.url}"${linkAttrs(s.url)}>${icons[s.icon]()}${s.label}</a></li>`)
             .join('')}</ul>
-        </div>
+        </div>`
+            : `<div>
+          <h2 class="footer__h">Get Started</h2>
+          <ul><li><a href="${site.bookingUrl}"${linkAttrs(site.bookingUrl)}>Book a free growth audit</a></li><li><a href="/services/">Explore our services</a></li></ul>
+        </div>`
+        }
       </div>
       <div class="footer__brand">${logo('logo--xl')}</div>
       <p class="footer__legal">© ${site.legalName} ${new Date().getFullYear()}. All Rights Reserved</p>
@@ -224,7 +276,7 @@ const footer = () => `
   </div>
 </footer>`;
 
-export const page = ({ path, title, description = site.description, body, headerTheme = 'dark' }) => {
+export const page = ({ path, title, description = site.description, body }) => {
   const fullTitle = title ? `${title} | ${site.name}` : site.title;
   const canonical = site.url.replace(/\/$/, '') + path;
   return `<!doctype html>
@@ -236,7 +288,7 @@ export const page = ({ path, title, description = site.description, body, header
   <meta name="description" content="${description}">
   <link rel="canonical" href="${canonical}">
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#060a24">
+  <meta name="theme-color" content="#1c0716">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="${site.name}">
   <meta property="og:title" content="${fullTitle}">
@@ -251,7 +303,7 @@ export const page = ({ path, title, description = site.description, body, header
   <script>document.documentElement.classList.add('js')</script>
   <script src="/assets/js/main.js" defer></script>
 </head>
-<body class="header-${headerTheme}">
+<body>
 <a class="skip" href="#main">Skip to content</a>
 ${header(path)}
 <main id="main">

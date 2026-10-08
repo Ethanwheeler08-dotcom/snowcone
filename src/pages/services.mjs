@@ -10,7 +10,7 @@ export default () =>
 <section class="section services-index">
   <div class="container">
     <div class="reveal">
-      <p class="eyebrow eyebrow--blue">Our Services</p>
+      <p class="eyebrow eyebrow--primary">Our Services</p>
       <h1 class="h1 h1--dark">Growth With Serious <em>Flavour</em></h1>
       <p class="lead lead--dark services-index__lead">Sharp strategy, real personality and results you can measure. Pick a channel below, or book a growth audit and we’ll tell you where the biggest wins are hiding.</p>
     </div>

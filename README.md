@@ -30,28 +30,39 @@ Needs Node 18+.
 
 ## Edit content
 
-- **Snowcone details, stats, reviews, team, press, case studies:** `src/config.mjs`
+- **Snowcone details, promises, reviews, team, press, case studies:** `src/config.mjs`
 - **Service copy and FAQs:** `src/data/services.mjs`
-- **Colours and fonts:** the `:root` block at the top of `src/assets/css/styles.css`
+- **Colours and fonts:** the `:root` block at the top of `src/assets/css/styles.css`. The brand is magenta (`--primary`) and hot pink (`--accent`), on a near-black plum (`--ink`).
 - **Logo:** `logoMark()` in `src/layout.mjs` and `src/assets/img/favicon.svg`
-- **Images:** put files in `src/assets/img/` and reference them as `/assets/img/...` in the `photo`, `image` or `src` fields in `src/config.mjs`. Empty fields show a branded placeholder.
+- **Images:** put files in `src/assets/img/` and reference them as `/assets/img/...` in the `photo`, `image` or `src` fields in `src/config.mjs`. Empty fields show brand artwork instead.
 
-After editing, run `npm run build`. The build lists every `TODO` still left in `src/config.mjs`.
+After editing, run `npm run build`. The build lists every `TODO: confirm` still left in `src/config.mjs`.
+
+## Sections that switch on with real proof
+
+The site never shows reviews, results, press or people that don't exist. These sections show honest alternatives until you add the real thing in `src/config.mjs`:
+
+| Add this | And the site shows | Instead of |
+| --- | --- | --- |
+| `reviews` (real Google reviews, word for word) | Review cards with stars | Snowcone's promises |
+| `site.rating.score` + `url` | Google rating badge | "Now booking free growth audits" pill |
+| `caseStudies` | "Cold Hard Results" case studies | "Built For Service Businesses" industries |
+| `results.items` with real numbers | Your results | Snowcone's commitments (100% ownership, 24/7, weekly, 0 lock-in) |
+| `team` (names, roles, photos) | "Our Team" grid and "Meet Our Team" buttons | "What We Stand For" values |
+| `founder.name` (+ photo) | Founder profile on About | Company story |
+| `press.articles` + `press.enabled = true` | "Hot Off The Press" | Nothing (section hidden) |
+| `marquee.items` with client logos | Client logos in the hero | Channels Snowcone works across |
+| `site.socials` URLs, `site.address`, `site.phone` | Footer links and details | Service area and "Get Started" links |
 
 ## Before launch
 
-Everything that has to be true about Snowcone is a marked placeholder. Don't publish placeholder stats, reviews or press as if they were real.
-
-- [ ] Domain, email, address and social links
-- [ ] Booking link for the "Book My Growth Audit" buttons (`site.bookingUrl`)
-- [ ] Google rating and reviews link, plus real reviews copied word for word
-- [ ] Headline stats and case studies
-- [ ] Client logos for the hero marquee
-- [ ] Press coverage, or set `press.enabled = false`
-- [ ] Founder bio, team names, roles and photos
-- [ ] Tech stack, and the audit value ("Worth $X,XXX")
-- [ ] Photos for the image placeholders
-- [ ] Set `site.draft = false` to remove the "Draft preview" ribbon
+- [ ] Real domain (`site.url`). `snowcone.com.au` is a guess and doesn't exist yet.
+- [ ] Real contact email (`site.email`). `hello@snowcone.com.au` won't receive mail until that domain is set up.
+- [ ] Booking link for the "Book My Growth Audit" buttons (`site.bookingUrl`), e.g. a Calendly or Typeform link
+- [ ] Confirm the four promises in `results.items` and the five in `promises` are all true for every client
+- [ ] Confirm the tech stack list
+- [ ] Confirm the line "We only take on a handful of new clients each month" at the bottom of each service page (`planSection` in `src/layout.mjs`)
+- [ ] Optional: reviews, results, team, press, socials and photos (see the table above)
 
 ## Deploy
 

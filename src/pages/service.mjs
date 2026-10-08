@@ -1,5 +1,5 @@
-import { stats } from '../config.mjs';
-import { page, icons, auditButton, button, sectionHead, faqList, personalitySection, planSection } from '../layout.mjs';
+import { results } from '../config.mjs';
+import { page, icons, auditButton, button, statList, faqList, personalitySection, planSection } from '../layout.mjs';
 
 export default (s) => {
   const hero = `
@@ -9,7 +9,7 @@ export default (s) => {
       <h1 class="h1 h1--dark reveal">${s.hero.title}</h1>
       <div class="reveal">
         <p class="lead lead--dark">${s.hero.text}</p>
-        <div class="btn-row">${auditButton('blue')}${button('See how it works', '#what-we-do', 'soft')}</div>
+        <div class="btn-row">${auditButton('primary')}${button('See how it works', '#what-we-do', 'soft')}</div>
       </div>
     </div>
     <hr class="rule">
@@ -23,23 +23,21 @@ export default (s) => {
   const trusted = `
 <section class="section trusted">
   <div class="container">
-    <h2 class="h2 h2--lg reveal">Trusted By Service Businesses Across <em>Australia</em></h2>
+    <h2 class="h2 h2--lg reveal">${results.serviceTitle}</h2>
     <hr class="rule">
-    <dl class="stats stats--plain reveal">
-      ${stats.map((st) => `<div class="stat"><dt class="stat__value" data-count>${st.value}</dt><dd>${st.label}</dd></div>`).join('')}
-    </dl>
+    <div class="reveal">${statList(results.items, 'stats--plain')}</div>
   </div>
 </section>`;
 
   const block = (eyebrow, data, id = '') => `
 <section class="section text-block"${id ? ` id="${id}"` : ''}>
   <div class="container">
-    <p class="eyebrow eyebrow--blue align-right reveal">${eyebrow}</p>
+    <p class="eyebrow eyebrow--primary align-right reveal">${eyebrow}</p>
     <hr class="rule">
     <div class="text-block__body reveal">
       <h2 class="h2 h2--lg">${data.title}</h2>
       <p class="lead lead--dark">${data.text}</p>
-      ${auditButton('blue')}
+      ${auditButton('primary')}
     </div>
   </div>
 </section>`;
@@ -55,7 +53,7 @@ export default (s) => {
           ([t, d], i) => `
       <li class="acc-step${i === 1 ? ' is-active' : ''}" data-step-item>
         <button class="acc-step__btn" aria-expanded="${i === 1}"><span class="acc-step__num">0${i + 1}</span><span class="acc-step__spine">${t}</span></button>
-        <div class="acc-step__content"><span class="script script--blue">0${i + 1}</span><h3 class="h3">${t}</h3><p>${d}</p></div>
+        <div class="acc-step__content"><span class="script script--primary">0${i + 1}</span><h3 class="h3">${t}</h3><p>${d}</p></div>
       </li>`,
         )
         .join('')}
@@ -69,7 +67,7 @@ export default (s) => {
     <div class="reveal">
       <h2 class="h2">Your Questions, <em>Answered</em></h2>
       <p class="lead lead--dark">${s.faqIntro}</p>
-      ${button('Contact Us', '#book', 'blue')}
+      ${button('Contact Us', '#book', 'primary')}
     </div>
     <div class="reveal">${faqList(s.faqs, 0)}</div>
   </div>

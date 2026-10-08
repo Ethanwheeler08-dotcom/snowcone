@@ -1,7 +1,7 @@
-import { site, clients, stats, press, caseStudies } from '../config.mjs';
+import { site, marquee, results, press, caseStudies, industries } from '../config.mjs';
 import { services, homeServiceStart } from '../data/services.mjs';
 import {
-  page, icons, auditButton, button, ratingBadge, media, sliderControls,
+  page, icons, auditButton, button, ratingBadge, media, sliderControls, statList,
   reviewsSection, faqList, personalitySection, auditSection,
 } from '../layout.mjs';
 
@@ -45,20 +45,20 @@ const logoItem = (l) =>
 const hero = `
 <section class="hero">
   <div class="container hero__inner">
-    <div class="reveal">${ratingBadge('dark')}</div>
+    <div class="reveal">${ratingBadge('dark', { fallback: true })}</div>
     <p class="hero__kicker reveal">We turn service businesses into <em>Lead Machines</em><br> with the data to prove it</p>
     <h1 class="h1 reveal">Generating Leads For Brands With Flavour</h1>
     <p class="hero__sub reveal">We’re a growth marketing agency for service businesses who are done watching their ad spend melt away into nothing.</p>
     <div class="btn-row reveal">
       ${auditButton()}
-      ${button('See Our Results', '/#case-studies', 'ghost-light')}
+      ${button(caseStudies.length ? 'See Our Results' : 'See How We Work', caseStudies.length ? '/#case-studies' : '/#method', 'ghost-light')}
     </div>
   </div>
   <div class="container hero__clients">
-    <p class="eyebrow eyebrow--accent">${clients.heading}</p>
-    <div class="marquee" aria-label="Clients">
-      <ul class="marquee__track">${clients.logos.map(logoItem).join('')}</ul>
-      <ul class="marquee__track" aria-hidden="true">${clients.logos.map(logoItem).join('')}</ul>
+    <p class="eyebrow eyebrow--accent">${marquee.heading}</p>
+    <div class="marquee">
+      <ul class="marquee__track">${marquee.items.map(logoItem).join('')}</ul>
+      <ul class="marquee__track" aria-hidden="true">${marquee.items.map(logoItem).join('')}</ul>
     </div>
   </div>
 </section>`;
@@ -67,7 +67,7 @@ const whoWeHelp = `
 <section class="section who">
   <div class="container">
     <div class="split split--top">
-      <p class="eyebrow eyebrow--blue who__eyebrow reveal">Who We Help</p>
+      <p class="eyebrow eyebrow--primary who__eyebrow reveal">Who We Help</p>
       <div class="reveal">
         <h2 class="h2 h2--lg">For Businesses Who Are Done Playing Small.</h2>
         <p class="lead lead--dark">${site.name} works with service businesses ready to scale with sharper strategy, stronger campaigns and a partner who actually gives a damn about the outcome.</p>
@@ -75,12 +75,12 @@ const whoWeHelp = `
     </div>
     <hr class="rule">
     <div class="split split--media">
-      ${media('', 'Who we help image', 'reveal')}
+      ${media('', 'Service business owners working with Snowcone', 'reveal')}
       <div class="fit reveal">
         <p class="fit__title"><em>You’re Probably A Good Fit If:</em></p>
         <ul class="checklist">${goodFit.map((t) => `<li>${icons.check(18)}<span>${t}</span></li>`).join('')}</ul>
         <p>If that sounds like your world, we should talk.</p>
-        ${auditButton('blue')}
+        ${auditButton('primary')}
       </div>
     </div>
   </div>
@@ -110,23 +110,21 @@ const pressSection = !press.enabled
   </div>
 </section>`;
 
-const results = `
+const resultsSection = `
 <section class="results">
   <div class="container">
     <div class="results__card reveal">
       <div class="results__head">
         <div>
-          <p class="eyebrow eyebrow--blue">Our Results</p>
-          <h2 class="h2 h2--lg">The Numbers Don’t Lie. Neither Do We.</h2>
+          <p class="eyebrow eyebrow--primary">${results.eyebrow}</p>
+          <h2 class="h2 h2--lg">${results.title}</h2>
         </div>
         <div>
-          <p class="lead lead--dark">We graph what we do. Every result below is real, attributed and repeatable.</p>
-          ${button('See Our Results', '/#case-studies', 'ink')}
+          <p class="lead lead--dark">${results.lead}</p>
+          ${caseStudies.length ? button('See Our Results', '/#case-studies', 'ink') : button('See How We Work', '/#method', 'ink')}
         </div>
       </div>
-      <dl class="stats">
-        ${stats.map((s) => `<div class="stat"><dt class="stat__value" data-count>${s.value}</dt><dd>${s.label}</dd></div>`).join('')}
-      </dl>
+      ${statList(results.items)}
     </div>
   </div>
 </section>`;
@@ -160,14 +158,14 @@ const serviceCards = `
   </div>
 </section>`;
 
-const cases = `
+const casesSection = `
 <section class="section cases" id="case-studies">
   <div class="container">
     <div class="center-head reveal">
       <p class="script">Cold Hard Results</p>
       <h2 class="h2 h2--xl">Results People Remember</h2>
       <p class="lead">Numbers are satisfying. Stories are convincing. Here’s what happens when strategy meets a real appetite for growth.</p>
-      ${auditButton('blue')}
+      ${auditButton('primary')}
     </div>
     <div class="case-tabs" data-tabs>
       <div class="pill-tabs" role="tablist" aria-label="Case studies">
@@ -191,8 +189,41 @@ const cases = `
   </div>
 </section>`;
 
+// Until there are real case studies, the same tabbed panel shows how Snowcone
+// approaches each kind of service business.
+const industriesSection = `
+<section class="section cases" id="industries">
+  <div class="container">
+    <div class="center-head reveal">
+      <p class="script">Who We Grow</p>
+      <h2 class="h2 h2--xl">Built For Service Businesses</h2>
+      <p class="lead">Every industry has its own buying cycle, margins and objections. Here’s where we’d start with yours.</p>
+      ${auditButton('primary')}
+    </div>
+    <div class="case-tabs" data-tabs>
+      <div class="pill-tabs" role="tablist" aria-label="Industries">
+        ${industries.map((c, i) => `<button role="tab" class="pill-tab" data-tab="${i}" aria-selected="${i === 0}">${c.tab}</button>`).join('')}
+      </div>
+      ${industries
+        .map(
+          (c, i) => `
+      <div class="case" role="tabpanel" data-panel="${i}"${i === 0 ? '' : ' hidden'}>
+        <div class="case__body">
+          <p class="eyebrow">Industry</p>
+          <h3 class="h3">${c.name}</h3>
+          <p>${c.summary}</p>
+          <dl class="case__stats case__stats--levers">${c.levers.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+        </div>
+        ${media('', '', 'case__media', c.icon)}
+      </div>`,
+        )
+        .join('')}
+    </div>
+  </div>
+</section>`;
+
 const methodSection = `
-<section class="method" data-method>
+<section class="method" id="method" data-method>
   <div class="container">
     <div class="method__head reveal">
       <p class="eyebrow eyebrow--accent">Our Secret Syrup</p>
@@ -239,7 +270,7 @@ const faqSection = `
     <div class="reveal">
       <h2 class="h2">The Questions Businesses Always Ask Us First</h2>
       <p class="lead lead--dark">We’d rather answer them here than leave you wondering.</p>
-      ${auditButton('blue')}
+      ${auditButton('primary')}
     </div>
     <div class="reveal">${faqList(homeFaqs)}</div>
   </div>
@@ -255,5 +286,5 @@ const about = personalitySection({
 export default () =>
   page({
     path: '/',
-    body: [hero, whoWeHelp, pressSection, results, serviceCards, cases, reviewsSection(), methodSection, faqSection, about, auditSection()].join('\n'),
+    body: [hero, whoWeHelp, pressSection, resultsSection, serviceCards, caseStudies.length ? casesSection : industriesSection, reviewsSection(), methodSection, faqSection, about, auditSection()].join('\n'),
   });
