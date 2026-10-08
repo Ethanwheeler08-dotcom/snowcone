@@ -38,6 +38,10 @@ Needs Node 18+.
 
 After editing, run `npm run build`. The build lists every `TODO: confirm` still left in `src/config.mjs`.
 
+## Main service
+
+AI Search & SEO (`seo-aeo` in `src/data/services.mjs`, marked `featured: true`) is Snowcone's main service. It's listed first everywhere, has its own section on the home page and a featured card on the Services page, and gets an "AI Search" link in the top bar. Move `featured: true` to another service to change that.
+
 ## Sections that switch on with real proof
 
 The site never shows reviews, results, press or people that don't exist. These sections show honest alternatives until you add the real thing in `src/config.mjs`:
@@ -45,13 +49,13 @@ The site never shows reviews, results, press or people that don't exist. These s
 | Add this | And the site shows | Instead of |
 | --- | --- | --- |
 | `reviews` (real Google reviews, word for word) | Review cards with stars | Snowcone's promises |
-| `site.rating.score` + `url` | Google rating badge | "Now booking free growth audits" pill |
+| `site.rating.score` + `url` | Google rating badge above the hero headline | Nothing |
 | `caseStudies` | "Cold Hard Results" case studies | "Built For Service Businesses" industries |
-| `results.items` with real numbers | Your results | Snowcone's commitments (100% ownership, 24/7, weekly, 0 lock-in) |
+| `results.items` with real numbers | Your results | Snowcone's commitments (100% ownership, 24/7 dashboard, weekly updates) |
 | `team` (names, roles, photos) | "Our Team" grid and "Meet Our Team" buttons | "What We Stand For" values |
 | `founder.name` (+ photo) | Founder profile on About | Company story |
 | `press.articles` + `press.enabled = true` | "Hot Off The Press" | Nothing (section hidden) |
-| `marquee.items` with client logos | Client logos in the hero | Channels Snowcone works across |
+| `marquee.items` with client logos | Client logo strip under the hero | Nothing (strip hidden) |
 | `site.socials` URLs, `site.address`, `site.phone` | Footer links and details | Service area and "Get Started" links |
 
 ## Before launch

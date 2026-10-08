@@ -170,42 +170,52 @@ export const personalitySection = ({ text, eyebrow = 'About Us', id = 'about' })
   </div>
 </section>`;
 
-export const auditSection = () => `
-<section class="audit" id="book">
-  <div class="container audit__inner reveal">
-    ${ratingBadge('dark')}
-    <h2 class="h2 h2--xl">Get Your Free Growth Audit</h2>
-    <p class="audit__value">${site.auditValue}</p>
-    <p class="lead">We look at your full digital presence, tell you exactly where you’re losing leads and show you what to fix first.</p>
-    <ul class="audit__list">
-      ${[
-        ['Full Account Performance Review', 'We go through your ads, website and search presence live and pinpoint exactly where leads are dropping off.'],
-        ['Competitor Visibility Analysis', 'See which competitors are outranking you, outspending you and how to take their position.'],
-        ['Your Quick-Win Action Plan', 'A clear, prioritised list of the fastest fixes to get more enquiries coming in.'],
-      ]
-        .map(([t, d]) => `<li>${icons.drop(20)}<div><h3>${t}</h3><p>${d}</p></div></li>`)
-        .join('')}
-    </ul>
-    ${auditButton()}
+// Closing call to action at the bottom of every page: one clean card.
+const ctaCard = ({ eyebrow, title, lead, items, note = '' }) => `
+<section class="cta" id="book">
+  <div class="container">
+    <div class="cta__card reveal">
+      <div class="cta__head">
+        ${ratingBadge('dark')}
+        <p class="eyebrow eyebrow--accent">${eyebrow}</p>
+        <h2 class="cta__title">${title}</h2>
+        <p class="cta__lead">${lead}</p>
+        <div class="btn-row">${auditButton()}${button('Email Us', `mailto:${site.email}`, 'ghost-light')}</div>
+        ${note ? `<p class="cta__note">${note}</p>` : ''}
+      </div>
+      <ul class="cta__list">
+        ${items.map(([t, d]) => `<li>${icons.drop(18)}<div><h3>${t}</h3>${d ? `<p>${d}</p>` : ''}</div></li>`).join('')}
+      </ul>
+    </div>
   </div>
 </section>`;
 
-// Service-page variant of the closing CTA.
-export const planSection = (items, service) => `
-<section class="audit audit--plan" id="book">
-  <div class="container audit__inner reveal">
-    ${ratingBadge('dark')}
-    <h2 class="h2 h2--xl">Book The Audit, Walk Away With A <em>Plan</em></h2>
-    <p class="lead">Even if we never work together, you’ll leave this call knowing:</p>
-    <ul class="audit__list audit__list--compact">
-      ${items.map((t) => `<li>${icons.drop(20)}<div><h3>${t}</h3></div></li>`).join('')}
-    </ul>
-    ${site.planNote ? `<p class="audit__note">${site.planNote}</p>` : ''}
-    ${auditButton()}
-  </div>
-</section>`;
+export const auditSection = () =>
+  ctaCard({
+    eyebrow: site.auditValue,
+    title: 'Get Your Free <em>Growth Audit</em>',
+    lead: 'We look at your ads, your website and how you show up in search and AI, then tell you where you’re losing leads and what to fix first.',
+    items: [
+      ['Full performance review', 'Where leads are dropping off across your ads, site and search.'],
+      ['Competitor check', 'Who’s outranking and outspending you, and how to take their spot.'],
+      ['Quick-win plan', 'The fastest fixes for more enquiries, in priority order.'],
+    ],
+  });
+
+// Service-page variant.
+export const planSection = (items) =>
+  ctaCard({
+    eyebrow: site.auditValue,
+    title: 'Book The Audit, Walk Away With A <em>Plan</em>',
+    lead: 'Even if we never work together, you’ll leave the call knowing:',
+    items: items.map((t) => [t, '']),
+    note: site.planNote,
+  });
 
 // ── Page shell ───────────────────────────────────────────────────────────────
+
+const primary = services.find((s) => s.featured);
+const primaryPath = primary ? `/services/${primary.slug}/` : '/services/';
 
 const header = (path) => `
 <header class="header" data-header>
@@ -213,7 +223,8 @@ const header = (path) => `
     <a href="/" class="header__logo" aria-label="${site.name} home">${logo()}</a>
     <nav class="nav" id="nav" aria-label="Main">
       <a href="/about/"${path.startsWith('/about') ? ' aria-current="page"' : ''}>About</a>
-      <a href="/services/"${path.startsWith('/services') ? ' aria-current="page"' : ''}>Services</a>
+      <a href="/services/"${path.startsWith('/services') && !path.startsWith(primaryPath) ? ' aria-current="page"' : ''}>Services</a>
+      ${primary ? `<a class="nav__feature" href="${primaryPath}"${path.startsWith(primaryPath) ? ' aria-current="page"' : ''}>${primary.tab}</a>` : ''}
       ${auditButton('accent', 'btn--sm')}
     </nav>
     <button class="nav-toggle" data-nav-toggle aria-controls="nav" aria-expanded="false" aria-label="Open menu">${icons.menu()}${icons.close()}</button>
@@ -280,7 +291,7 @@ export const page = ({ path, title, description = site.description, body }) => {
   <meta name="description" content="${description}">
   <link rel="canonical" href="${canonical}">
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#1c0716">
+  <meta name="theme-color" content="#000000">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="${site.name}">
   <meta property="og:title" content="${fullTitle}">

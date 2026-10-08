@@ -39,26 +39,72 @@ const goodFit = [
   'You’re ready to give a good strategy the time it needs to work.',
 ];
 
+const primary = services.find((s) => s.featured);
+const badge = ratingBadge('dark', { fallback: true });
+
 const logoItem = (l) =>
   `<li>${l.src ? `<img src="${l.src}" alt="${l.name}" loading="lazy">` : `<span class="wordmark">${l.name}</span>`}</li><li class="marquee__cone" aria-hidden="true">${logoMark(18)}</li>`;
 
 const hero = `
 <section class="hero">
   <div class="container hero__inner">
-    <div class="reveal">${ratingBadge('dark', { fallback: true })}</div>
+    ${badge ? `<div class="reveal">${badge}</div>` : ''}
     <p class="hero__kicker reveal">We turn service businesses into <em>Lead Machines</em><br> and show you the numbers behind every lead</p>
     <h1 class="h1 reveal">Generating Leads For Brands With <em class="squiggle">Flavour</em></h1>
-    <p class="hero__sub reveal">We’re a growth marketing agency for service businesses that are sick of watching their ad spend melt.</p>
+    <p class="hero__sub reveal">We’re a growth marketing agency that gets service businesses recommended by AI, found on Google and booked up.</p>
     <div class="btn-row reveal">
       ${auditButton()}
-      ${button(caseStudies.length ? 'See Our Results' : 'See How We Work', caseStudies.length ? '/#case-studies' : '/#method', 'ghost-light')}
+      ${primary ? button('Get Found By AI', '/#ai-search', 'ghost-light') : button('See How We Work', '/#method', 'ghost-light')}
     </div>
   </div>
-  <div class="container hero__clients">
+  ${
+    marquee.items.length
+      ? `<div class="container hero__clients">
     <p class="eyebrow eyebrow--accent">${marquee.heading}</p>
     <div class="marquee">
       <ul class="marquee__track">${marquee.items.map(logoItem).join('')}</ul>
       <ul class="marquee__track" aria-hidden="true">${marquee.items.map(logoItem).join('')}</ul>
+    </div>
+  </div>`
+      : ''
+  }
+</section>`;
+
+// Snowcone's main service gets its own section straight after the hero.
+const aiFeature = !primary
+  ? ''
+  : `
+<section class="section ai-feature" id="ai-search">
+  <div class="container">
+    <div class="ai-feature__grid">
+      <div class="ai-feature__copy reveal">
+        <p class="eyebrow eyebrow--primary">Our Specialty</p>
+        <h2 class="h2 h2--lg">Be The Business AI <em>Recommends</em></h2>
+        <p class="lead lead--dark">More of your customers now ask ChatGPT, Gemini or Google’s AI who to call. If those tools don’t know you, they recommend someone else. Getting your name into those answers is what we focus on most.</p>
+        <ul class="ai-feature__points">
+          <li>${icons.drop(18)}<span><strong>Get recommended by AI.</strong> We shape how AI assistants describe your business and when they suggest it.</span></li>
+          <li>${icons.drop(18)}<span><strong>Rank on Google too.</strong> The same work lifts your normal search rankings and map listing.</span></li>
+          <li>${icons.drop(18)}<span><strong>See every mention.</strong> Your dashboard tracks where AI tools bring you up, and how often.</span></li>
+        </ul>
+        <div class="btn-row">${button('Explore AI Search', `/services/${primary.slug}/`, 'primary')}${auditButton('soft')}</div>
+      </div>
+      <figure class="ai-chat reveal">
+        <div class="ai-chat__bar" aria-hidden="true"><span></span><span></span><span></span><small>AI assistant</small></div>
+        <p class="ai-chat__msg ai-chat__msg--user">Who’s the best emergency plumber near me?</p>
+        <div class="ai-chat__msg ai-chat__msg--ai">
+          <p>Here are a few well-reviewed options nearby:</p>
+          <ol>
+            <li class="is-you"><strong>Your Business</strong><span>Fast call-outs, great reviews</span><em>Top pick</em></li>
+            <li><strong>Another Plumber</strong><span>Open weekends</span></li>
+            <li><strong>One More Option</strong><span>Family-owned</span></li>
+          </ol>
+        </div>
+        <figcaption>Illustration: the kind of answer we work towards.</figcaption>
+      </figure>
+    </div>
+    <div class="ai-feature__platforms reveal">
+      <span>Where we get you found</span>
+      <ul class="chips">${primary.platforms.map((p) => `<li>${p}</li>`).join('')}</ul>
     </div>
   </div>
 </section>`;
@@ -284,5 +330,5 @@ const about = personalitySection({
 export default () =>
   page({
     path: '/',
-    body: [hero, whoWeHelp, pressSection, resultsSection, serviceCards, caseStudies.length ? casesSection : industriesSection, reviewsSection(), methodSection, faqSection, about, auditSection()].join('\n'),
+    body: [hero, aiFeature, whoWeHelp, pressSection, resultsSection, serviceCards, caseStudies.length ? casesSection : industriesSection, reviewsSection(), methodSection, faqSection, about, auditSection()].join('\n'),
   });

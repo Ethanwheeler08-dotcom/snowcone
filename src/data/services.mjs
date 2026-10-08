@@ -3,6 +3,51 @@
 
 export const services = [
   {
+    slug: 'seo-aeo',
+    // Snowcone's main service: listed first everywhere, featured on the home and services pages.
+    featured: true,
+    name: 'AI Search & SEO',
+    tab: 'AI Search',
+    label: 'AI Search & SEO (AEO)',
+    icon: 'search',
+    platforms: ['ChatGPT', 'Google AI Overviews', 'Gemini', 'Perplexity', 'Copilot'],
+    card: {
+      title: 'Be The Cherry On Top In Search And AI',
+      text: 'We get you found on Google and mentioned in AI answers. Visibility like that keeps paying off long after the work is done.',
+    },
+    index: 'Get recommended by ChatGPT, Gemini and Google’s AI answers, and rank on Google as well, so you show up wherever people look.',
+    hero: {
+      title: 'Get Found. By People <em>And By AI</em>',
+      text: 'Ranking on Google still matters. But plenty of people now ask ChatGPT instead. We get you showing up in both, so whether someone searches or asks, your name comes up.',
+    },
+    problem: {
+      title: 'If You’re Not The Answer, You’re <em>Invisible</em>',
+      text: 'Search is changing fast. Most of your customers still Google you. More of them now ask an AI as well, and if it doesn’t know you exist, you’re not even in the running. Plenty of business websites aren’t set up for either. Slow pages, thin content, no plan. So they sit on page three while competitors get quoted by Google and ChatGPT alike.',
+    },
+    solution: {
+      title: 'We Make You The Obvious <em>Answer</em>',
+      text: 'First, the SEO groundwork that gets you ranking. Technical fixes, content that answers what people are really asking, and the kind of authority Google trusts. Then we add AEO (Answer Engine Optimisation), so the AI tools your customers use start recommending you as well. It’s a slower game than ads, but it compounds. Rankings you earn keep bringing people in for years.',
+    },
+    steps: {
+      title: 'Three Steps To Being <em>Found</em>',
+      items: [
+        ['Audit and find the gaps', 'We map where you rank, where you don’t and where the easy wins are hiding.'],
+        ['Fix, build and publish', 'We sort out the technical issues, then write content that ranks and gets cited.'],
+        ['Track rankings and citations', 'We keep an eye on your Google positions and your mentions in AI tools, and keep pushing both up.'],
+      ],
+    },
+    why: 'SEO has a bad reputation thanks to vague reports and work nobody can point to. We’d rather show you. Every fix, page and article we publish goes in your dashboard, right next to the rankings it’s meant to move. If something isn’t working, you’ll hear it from us first.',
+    faqIntro: 'Ranking on Google and getting mentioned by AI, explained without the jargon. Anything we’ve missed, just ask.',
+    faqs: [
+      ['How long until I rank?', 'Usually three to six months before you see meaningful movement, sometimes sooner for easier terms. Anyone promising page one in a few weeks is telling you porkies. We’ll map out a realistic timeline in your audit.'],
+      ['What even is AEO?', 'Answer Engine Optimisation. It’s the work that helps AI tools like ChatGPT, Gemini and Google’s AI Overviews understand your business, trust it and recommend it when people ask for help.'],
+      ['Is this the same as GEO or LLM optimisation?', 'Yes. AEO, GEO (Generative Engine Optimisation) and LLM optimisation are different names for the same goal: getting AI tools to mention and recommend your business. We use AEO because it’s the simplest to say.'],
+      ['Is SEO still worth it with AI around?', 'More than ever. AI answers lean on the same things good SEO builds, like clear content, a healthy site and a solid reputation. Do both and you show up however people look.'],
+      ['Will I see what’s happening?', 'Yes. You get a live dashboard with your rankings, traffic and AI citations, plus regular updates on what we’ve done and what’s moved.'],
+    ],
+    audit: ['Where you’re losing visibility right now, on Google and in AI', 'Your three biggest search opportunities', 'A clear picture of what ranking could be worth to you'],
+  },
+  {
     slug: 'meta-ads',
     name: 'Meta Ads',
     tab: 'Meta Ads',
@@ -84,47 +129,6 @@ export const services = [
       ['Will I know what’s working?', 'Always. You get live access to your account and dashboard, plus a short weekly update in plain English on what we changed and why.'],
     ],
     audit: ['Where your ad spend is leaking right now', 'Your three biggest opportunities in paid search', 'A realistic number for what your cost-per-lead could be'],
-  },
-  {
-    slug: 'seo-aeo',
-    name: 'SEO & AEO',
-    tab: 'SEO & AEO',
-    label: 'SEO & AEO',
-    icon: 'search',
-    card: {
-      title: 'Be The Cherry On Top In Search And AI',
-      text: 'We get you found on Google and mentioned in AI answers. Visibility like that keeps paying off long after the work is done.',
-    },
-    index: 'Rank on Google and get recommended by AI tools, so you show up wherever people go looking.',
-    hero: {
-      title: 'Get Found. By People <em>And By AI</em>',
-      text: 'Ranking on Google still matters. But plenty of people now ask ChatGPT instead. We get you showing up in both, so whether someone searches or asks, your name comes up.',
-    },
-    problem: {
-      title: 'If You’re Not The Answer, You’re <em>Invisible</em>',
-      text: 'Search is changing fast. Most of your customers still Google you. More of them now ask an AI as well, and if it doesn’t know you exist, you’re not even in the running. Plenty of business websites aren’t set up for either. Slow pages, thin content, no plan. So they sit on page three while competitors get quoted by Google and ChatGPT alike.',
-    },
-    solution: {
-      title: 'We Make You The Obvious <em>Answer</em>',
-      text: 'First, the SEO groundwork that gets you ranking. Technical fixes, content that answers what people are really asking, and the kind of authority Google trusts. Then we add AEO (Answer Engine Optimisation), so the AI tools your customers use start recommending you as well. It’s a slower game than ads, but it compounds. Rankings you earn keep bringing people in for years.',
-    },
-    steps: {
-      title: 'Three Steps To Being <em>Found</em>',
-      items: [
-        ['Audit and find the gaps', 'We map where you rank, where you don’t and where the easy wins are hiding.'],
-        ['Fix, build and publish', 'We sort out the technical issues, then write content that ranks and gets cited.'],
-        ['Track rankings and citations', 'We keep an eye on your Google positions and your mentions in AI tools, and keep pushing both up.'],
-      ],
-    },
-    why: 'SEO has a bad reputation thanks to vague reports and work nobody can point to. We’d rather show you. Every fix, page and article we publish goes in your dashboard, right next to the rankings it’s meant to move. If something isn’t working, you’ll hear it from us first.',
-    faqIntro: 'Ranking on Google and getting mentioned by AI, explained without the jargon. Anything we’ve missed, just ask.',
-    faqs: [
-      ['How long until I rank?', 'Usually three to six months before you see meaningful movement, sometimes sooner for easier terms. Anyone promising page one in a few weeks is telling you porkies. We’ll map out a realistic timeline in your audit.'],
-      ['What even is AEO?', 'Answer Engine Optimisation. It’s the work that helps AI tools like ChatGPT, Gemini and Google’s AI Overviews understand your business, trust it and recommend it when people ask for help.'],
-      ['Is SEO still worth it with AI around?', 'More than ever. AI answers lean on the same things good SEO builds, like clear content, a healthy site and a solid reputation. Do both and you show up however people look.'],
-      ['Will I see what’s happening?', 'Yes. You get a live dashboard with your rankings, traffic and AI citations, plus regular updates on what we’ve done and what’s moved.'],
-    ],
-    audit: ['Where you’re losing visibility right now, on Google and in AI', 'Your three biggest search opportunities', 'A clear picture of what ranking could be worth to you'],
   },
   {
     slug: 'web-design',
@@ -262,8 +266,8 @@ export const services = [
       { value: 'Live', label: 'Walkthrough of the whole plan with the people who built it' }, // TODO: confirm
     ],
     audit: ['Where your current approach is holding you back', 'Your three biggest growth opportunities, ranked', 'A clear picture of what your next stage could look like'],
-  },
+  }
 ];
 
-// The home page carousel opens on SEO & AEO, matching the original layout.
-export const homeServiceStart = 2;
+// The home page carousel opens on the first service (AI Search).
+export const homeServiceStart = 0;

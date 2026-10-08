@@ -89,7 +89,7 @@ export default (s) => {
       trusted,
       personalitySection({ text: `<p>${s.why}</p>`, eyebrow: 'Why Us?', id: 'why-us' }),
       faq,
-      planSection(s.audit, s),
+      planSection(s.audit),
     ].join('\n'),
   });
 };

@@ -23,7 +23,7 @@ export const site = {
   url: 'https://snowcone.com.au', // TODO: confirm domain (used for canonical + social tags)
   title: 'Snowcone | Growth Marketing With Serious Flavour',
   description:
-    'Growth marketing agency for service businesses across Australia. Sharp strategy, standout creative and results you can measure. Nothing watered down.',
+    'Growth marketing for service businesses, from getting recommended by ChatGPT and Google’s AI answers to ads that bring in enquiries. Sharp strategy, results you can measure.',
 
   email: 'hello@snowcone.com.au', // TODO: confirm contact email
   phone: '', // optional, e.g. '08 1234 5678'
@@ -32,7 +32,7 @@ export const site = {
 
   // Shown in the footer. Leave text empty to show the service area instead.
   address: { text: '', mapUrl: '' },
-  serviceArea: 'Working with service businesses across Australia',
+  serviceArea: 'Working with service businesses worldwide',
 
   // Add a URL to show a social link in the footer; empty ones are hidden.
   socials: [
@@ -41,10 +41,10 @@ export const site = {
     { label: 'LinkedIn', icon: 'linkedin', url: '' },
   ],
 
-  // Google rating badge. Leave score empty until there are real Google reviews;
-  // the hero then shows the `badge` text instead.
+  // Google rating badge, shown above the hero headline once there's a real score.
+  // `badge` is optional text shown there instead while there's no rating.
   rating: { score: '', label: 'from reviews', url: '' },
-  badge: 'Now booking free growth audits',
+  badge: '',
 
   auditValue: '100% free, no strings attached',
 
@@ -52,14 +52,11 @@ export const site = {
   planNote: 'We only take on a handful of new clients each month, so we can give each one the attention it takes to deliver.', // TODO: confirm
 };
 
-// Hero marquee. Shows the channels Snowcone works across. Once clients have
-// agreed to be named, swap in their logos: { name: 'Client', src: '/assets/img/clients/client.svg' },
-// and change the heading too, e.g. 'Trusted By Brands Who Came For More'.
+// Logo strip under the hero. Hidden while empty. Once clients have agreed to be
+// named, add their logos: { name: 'Client', src: '/assets/img/clients/client.svg' }.
 export const marquee = {
-  heading: 'Growth Across Every Channel Your Customers Use',
-  items: ['Google Search', 'Google Maps', 'YouTube', 'Facebook', 'Instagram', 'LinkedIn', 'TikTok', 'ChatGPT', 'Email'].map(
-    (name) => ({ name, src: '' }),
-  ),
+  heading: 'Trusted By Brands Who Came For More',
+  items: [],
 };
 
 // Home page numbers card and the band near the top of each service page.
