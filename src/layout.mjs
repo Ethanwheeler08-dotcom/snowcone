@@ -1,0 +1,265 @@
+import { site, reviews } from './config.mjs';
+import { services } from './data/services.mjs';
+
+// ── Icons ────────────────────────────────────────────────────────────────────
+
+const svg = (body, { size = 24, vb = '0 0 24 24', cls = '' } = {}) =>
+  `<svg class="icon ${cls}" width="${size}" height="${size}" viewBox="${vb}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+
+export const icons = {
+  chevron: (s = 14) => svg('<path d="m9 6 6 6-6 6"/>', { size: s }),
+  chevronLeft: (s = 14) => svg('<path d="m15 6-6 6 6 6"/>', { size: s }),
+  arrow: (s = 14) => svg('<path d="M5 12h14M13 6l6 6-6 6"/>', { size: s }),
+  check: (s = 20) => svg('<path d="m4.5 12.5 5 5 10-11"/>', { size: s }),
+  plus: (s = 20) => svg('<path d="M12 5v14M5 12h14"/>', { size: s }),
+  menu: (s = 22) => svg('<path d="M4 7h16M4 12h16M4 17h16"/>', { size: s }),
+  close: (s = 22) => svg('<path d="M6 6l12 12M18 6 6 18"/>', { size: s }),
+  linkedin: (s = 16) =>
+    `<svg class="icon" width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1-.02-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06C21.6 9.04 22 11.5 22 14.7V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21H10V9.5Z"/></svg>`,
+  instagram: (s = 16) =>
+    svg('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>', { size: s }),
+  facebook: (s = 16) =>
+    `<svg class="icon" width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.87.25-1.46 1.5-1.46h1.6V4.46A21 21 0 0 0 14.3 4.3c-2.3 0-3.8 1.4-3.8 3.96v2.24H8v3h2.5V21h3Z"/></svg>`,
+  google: (s = 22) =>
+    `<svg class="icon" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.9a5.04 5.04 0 0 1-2.2 3.3v2.75h3.56c2.08-1.92 3.24-4.74 3.24-8.06Z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.98.66-2.24 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.07H2.18a11 11 0 0 0 0 9.87l3.66-2.84Z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.2 1.64l3.15-3.15A10.96 10.96 0 0 0 12 1 11 11 0 0 0 2.18 7.07L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38Z"/></svg>`,
+  // Service icons
+  meta: (s = 22) => svg('<path d="M7 8c-2.6 0-4 2.1-4 4.2S4.3 16 6.5 16c3.6 0 5.7-8 10-8 2.6 0 4.5 1.8 4.5 4.2S20 16 17.5 16c-3.7 0-5.9-8-10.5-8Z"/>', { size: s }),
+  search: (s = 22) => svg('<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/>', { size: s }),
+  web: (s = 22) => svg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M6.5 6.8h.01M9 6.8h.01"/>', { size: s }),
+  mail: (s = 22) => svg('<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>', { size: s }),
+  strategy: (s = 22) => svg('<path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/>', { size: s }),
+};
+
+// Inline brand mark: a snowcone (scoop + cone) in the accent colours.
+export const logoMark = (size = 30) => `<svg class="logo-mark" width="${size}" height="${size}" viewBox="0 0 32 32" aria-hidden="true">
+  <path d="M7 13.5h18L17.3 29.2a1.5 1.5 0 0 1-2.6 0L7 13.5Z" fill="var(--cone)"/>
+  <path d="M10 18.5h12M12.5 23h7" stroke="var(--cone-line)" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M5.5 13.6c-.9-5 4.2-10 10.5-10s11.4 5 10.5 10c-.2 1-1.4 1.3-2 .5-.6-.8-1.8-.8-2.4 0-.7 1-2.1 1-2.8 0-.7-1-2.1-1-2.8 0-.7 1-2.2 1-2.9 0-.6-.8-1.8-.8-2.4 0-.6.8-1.8.5-2-.5Z" fill="var(--scoop)"/>
+  <path d="M16 3.6c3.4 0 6.4 1.5 8.3 3.9-2.6-1.4-5.4-1.9-8.6-.7-2.4.9-4.9.6-7-.4C10.6 4.7 13.2 3.6 16 3.6Z" fill="var(--scoop-hi)"/>
+</svg>`;
+
+export const logo = (cls = '') =>
+  `<span class="logo ${cls}">${logoMark()}<span class="logo-word">snowcone</span></span>`;
+
+// ── Small helpers ────────────────────────────────────────────────────────────
+
+export const isExternal = (url) => /^(https?:|mailto:)/.test(url);
+const linkAttrs = (url) => (/^https?:/.test(url) ? ' target="_blank" rel="noopener"' : '');
+
+// Primary button with the flip-on-hover label from the original.
+export const button = (label, url = site.bookingUrl, variant = 'accent', extra = '') =>
+  `<a class="btn btn--${variant} ${extra}" href="${url}"${linkAttrs(url)}><span class="btn__label" data-label="${label}"><span>${label}</span></span>${icons.chevron()}</a>`;
+
+export const auditButton = (variant = 'accent', extra = '') => button('Book My Growth Audit', site.bookingUrl, variant, extra);
+
+export const stars = '<span class="stars" aria-label="5 out of 5 stars">★★★★★</span>';
+
+export const ratingBadge = (variant = 'dark') => `
+  <a class="rating rating--${variant}" href="${site.rating.url}"${linkAttrs(site.rating.url)}>
+    <span class="rating__top">${icons.google(16)}${stars}</span>
+    <span class="rating__text">${site.rating.score} ${site.rating.label}</span>
+  </a>`;
+
+// Image slot: shows the image if a src is given, otherwise a branded placeholder.
+export const media = (src, label, cls = '') =>
+  src
+    ? `<div class="media ${cls}"><img src="${src}" alt="${label}" loading="lazy"></div>`
+    : `<div class="media media--ph ${cls}" role="img" aria-label="${label}"><span class="media__ph">${logoMark(44)}<span>${label}</span></span></div>`;
+
+export const sectionHead = (eyebrow, title, extra = '') => `
+  <div class="section-head reveal">
+    <h2 class="h2">${title}</h2>
+    ${extra}
+    <p class="eyebrow">${eyebrow}</p>
+  </div>`;
+
+// ── Shared sections ──────────────────────────────────────────────────────────
+
+export const reviewsSection = ({ id = 'reviews' } = {}) => `
+<section class="section reviews" id="${id}">
+  <div class="container">
+    <div class="center-head reveal">
+      ${ratingBadge('light')}
+      <h2 class="h2 h2--xl">Did Someone Order Extra Syrup On That <em>ROI?</em></h2>
+      <p class="lead">Don’t take our word for it. Here’s what happens when ambitious founders meet a growth partner who actually delivers.</p>
+      ${auditButton('blue')}
+    </div>
+  </div>
+  <div class="slider" data-slider>
+    <div class="slider__track container" data-track>
+      ${reviews
+        .map(
+          (r) => `
+      <article class="review-card">
+        <div class="review-card__top">${stars}${icons.google()}</div>
+        <p class="review-card__text">${r.text}</p>
+        <div class="review-card__by">
+          <span class="avatar" aria-hidden="true">${r.name.trim()[0]}</span>
+          <span><strong>${r.name}</strong><small>${r.when}</small></span>
+        </div>
+      </article>`,
+        )
+        .join('')}
+    </div>
+    ${sliderControls('reviews')}
+  </div>
+</section>`;
+
+export const sliderControls = (noun = '') => `
+    <div class="slider__controls container">
+      <div class="slider__status"><span data-status>Showing ${noun ? noun + ' ' : ''}1 of 1</span><span class="slider__bar"><span data-bar></span></span></div>
+      <div class="slider__btns">
+        <button class="icon-btn" data-prev aria-label="Previous">${icons.chevronLeft()}</button>
+        <button class="icon-btn" data-next aria-label="Next">${icons.chevron()}</button>
+      </div>
+    </div>`;
+
+export const faqList = (faqs, open = -1) => `
+  <div class="faq">
+    ${faqs
+      .map(
+        ([q, a], i) => `
+    <details class="faq__item"${i === open ? ' open' : ''}>
+      <summary><span>${q}</span>${icons.plus()}</summary>
+      <div class="faq__a"><p>${a}</p></div>
+    </details>`,
+      )
+      .join('')}
+  </div>`;
+
+export const personalitySection = ({ text, eyebrow = 'About Us', id = 'about' }) => `
+<section class="section personality" id="${id}">
+  <div class="container">
+    ${sectionHead(eyebrow, 'Performance With <em>Personality</em>')}
+    <div class="split split--media">
+      <div class="prose reveal">
+        ${text}
+        ${button('Meet Our Team', '/about/', 'ink')}
+      </div>
+      ${media('', 'Team photo', 'reveal media--wide')}
+    </div>
+  </div>
+</section>`;
+
+export const auditSection = () => `
+<section class="audit" id="book">
+  <div class="container audit__inner reveal">
+    ${ratingBadge('dark')}
+    <h2 class="h2 h2--xl">Get Your Free Growth Audit</h2>
+    <p class="audit__value">${site.auditValue}</p>
+    <p class="lead">We look at your full digital presence, tell you exactly where you’re losing leads and show you what to fix first.</p>
+    <ul class="audit__list">
+      ${[
+        ['Full Account Performance Review', 'We go through your ads, website and search presence live and pinpoint exactly where leads are dropping off.'],
+        ['Competitor Visibility Analysis', 'See which competitors are outranking you, outspending you and how to take their position.'],
+        ['Your Quick-Win Action Plan', 'A clear, prioritised list of the fastest fixes to get more enquiries coming in.'],
+      ]
+        .map(([t, d]) => `<li>${icons.check()}<div><h3>${t}</h3><p>${d}</p></div></li>`)
+        .join('')}
+    </ul>
+    ${auditButton()}
+  </div>
+</section>`;
+
+// Service-page variant of the closing CTA.
+export const planSection = (items, service) => `
+<section class="audit audit--plan" id="book">
+  <div class="container audit__inner reveal">
+    ${ratingBadge('dark')}
+    <h2 class="h2 h2--xl">Book The Audit, Walk Away With A <em>Plan</em></h2>
+    <p class="lead">Even if we never work together, you’ll leave this call knowing:</p>
+    <ul class="audit__list audit__list--compact">
+      ${items.map((t) => `<li>${icons.check()}<div><h3>${t}</h3></div></li>`).join('')}
+    </ul>
+    <p class="audit__note">We only take on a handful of new clients each month, so we can give each one the attention it takes to deliver.</p>
+    ${auditButton()}
+  </div>
+</section>`;
+
+// ── Page shell ───────────────────────────────────────────────────────────────
+
+const header = (path) => `
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a href="/" class="header__logo" aria-label="${site.name} home">${logo()}</a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="/about/"${path.startsWith('/about') ? ' aria-current="page"' : ''}>About</a>
+      <a href="/services/"${path.startsWith('/services') ? ' aria-current="page"' : ''}>Services</a>
+      ${auditButton('accent', 'btn--sm')}
+    </nav>
+    <button class="nav-toggle" data-nav-toggle aria-controls="nav" aria-expanded="false" aria-label="Open menu">${icons.menu()}${icons.close()}</button>
+  </div>
+</header>`;
+
+const footer = () => `
+<footer class="footer">
+  <div class="container">
+    <div class="footer__card">
+      <div class="footer__cols">
+        <div>
+          <h2 class="footer__h">Company</h2>
+          <ul><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/services/">Services</a></li></ul>
+        </div>
+        <div>
+          <h2 class="footer__h">Services</h2>
+          <ul>${services.map((s) => `<li><a href="/services/${s.slug}/">${s.name}</a></li>`).join('')}</ul>
+        </div>
+        <div>
+          <h2 class="footer__h">Contact Us</h2>
+          <p class="footer__label">Location</p>
+          <p><a href="${site.address.mapUrl}" target="_blank" rel="noopener">${site.address.text}</a></p>
+          <p class="footer__label">Email</p>
+          <p><a href="mailto:${site.email}">${site.email}</a></p>
+        </div>
+        <div>
+          <h2 class="footer__h">Connect With Us</h2>
+          <ul class="footer__social">${site.socials
+            .map((s) => `<li><a href="${s.url}"${linkAttrs(s.url)}>${icons[s.icon]()}${s.label}</a></li>`)
+            .join('')}</ul>
+        </div>
+      </div>
+      <div class="footer__brand">${logo('logo--xl')}</div>
+      <p class="footer__legal">© ${site.legalName} ${new Date().getFullYear()}. All Rights Reserved</p>
+    </div>
+  </div>
+</footer>`;
+
+export const page = ({ path, title, description = site.description, body, headerTheme = 'dark' }) => {
+  const fullTitle = title ? `${title} | ${site.name}` : site.title;
+  const canonical = site.url.replace(/\/$/, '') + path;
+  return `<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${fullTitle}</title>
+  <meta name="description" content="${description}">
+  <link rel="canonical" href="${canonical}">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#060a24">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="${site.name}">
+  <meta property="og:title" content="${fullTitle}">
+  <meta property="og:description" content="${description}">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:image" content="${site.url.replace(/\/$/, '')}/assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="/assets/js/main.js" defer></script>
+</head>
+<body class="header-${headerTheme}">
+<a class="skip" href="#main">Skip to content</a>
+${header(path)}
+<main id="main">
+${body}
+</main>
+${footer()}
+${site.draft ? '<div class="draft-ribbon" role="note">Draft preview: some content is placeholder</div>' : ''}
+</body>
+</html>
+`;
+};

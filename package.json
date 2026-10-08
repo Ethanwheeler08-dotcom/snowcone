@@ -1,0 +1,13 @@
+{
+  "name": "snowcone-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Snowcone Marketing website",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && npx --yes http-server public -p 8080 -c-1",
+    "preview": "npx --yes http-server public -p 8080 -c-1"
+  },
+  "engines": { "node": ">=18" }
+}
