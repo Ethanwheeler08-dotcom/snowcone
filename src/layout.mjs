@@ -1,4 +1,4 @@
-import { site, reviews, promises, team } from './config.mjs';
+import { site, reviews, team } from './config.mjs';
 import { services } from './data/services.mjs';
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -32,6 +32,11 @@ export const icons = {
   wrench: (s = 22) => svg('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/>', { size: s }),
   scale: (s = 22) => svg('<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>', { size: s }),
   pulse: (s = 22) => svg('<path d="M3 12h4l2-5 4 10 2-5h6"/>', { size: s }),
+  // Syrup drop, used as the list bullet
+  drop: (s = 18) => `<svg class="icon icon--drop" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c3.6 4.7 6.5 8.4 6.5 12a6.5 6.5 0 0 1-13 0c0-3.6 2.9-7.3 6.5-12Z" fill="currentColor"/><path d="M9.2 14.6a3 3 0 0 0 2.4 2.9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"/></svg>`,
+  megaphone: (s = 22) => svg('<path d="M4 10v4a1 1 0 0 0 1 1h2l5 4V5L7 9H5a1 1 0 0 0-1 1Z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/>', { size: s }),
+  chart: (s = 22) => svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', { size: s }),
+  brush: (s = 22) => svg('<path d="M18.4 2.6a2 2 0 0 1 3 3L12 15l-3-3 9.4-9.4Z"/><path d="M9 12c-2.5 0-4 1.6-4 4 0 1.5-.8 2.6-2 3 3.8 1.3 9 .4 9-4"/>', { size: s }),
   briefcase: (s = 22) => svg('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>', { size: s }),
 };
 
@@ -42,6 +47,24 @@ export const logoMark = (size = 30) => `<svg class="logo-mark" width="${size}" h
   <path d="M5.5 13.6c-.9-5 4.2-10 10.5-10s11.4 5 10.5 10c-.2 1-1.4 1.3-2 .5-.6-.8-1.8-.8-2.4 0-.7 1-2.1 1-2.8 0-.7-1-2.1-1-2.8 0-.7 1-2.2 1-2.9 0-.6-.8-1.8-.8-2.4 0-.6.8-1.8.5-2-.5Z" fill="var(--scoop)"/>
   <path d="M16 3.6c3.4 0 6.4 1.5 8.3 3.9-2.6-1.4-5.4-1.9-8.6-.7-2.4.9-4.9.6-7-.4C10.6 4.7 13.2 3.6 16 3.6Z" fill="var(--scoop-hi)"/>
 </svg>`;
+
+// Syrup dripping off the bottom edge of a coloured section into the next one.
+// It's filled with the section's bottom colour (--drip in the CSS).
+const dripPath = (() => {
+  const base = 10;
+  // [centre x, half width, length]
+  const drips = [[70, 13, 34], [190, 9, 18], [330, 15, 52], [470, 8, 22], [610, 12, 40], [760, 16, 62], [905, 9, 24], [1040, 13, 44], [1180, 10, 28], [1330, 15, 50]];
+  let d = `M0 0H1440V${base}`;
+  for (const [cx, w, len] of [...drips].reverse()) {
+    const y = base + len;
+    d += `H${cx + w + 10}C${cx + w + 2} ${base} ${cx + w} ${base + 4} ${cx + w} ${base + 10}V${y - w}A${w} ${w} 0 0 1 ${cx - w} ${y - w}V${base + 10}C${cx - w} ${base + 4} ${cx - w - 2} ${base} ${cx - w - 10} ${base}`;
+  }
+  return `${d}H0Z`;
+})();
+
+// Place it straight after the section it drips from.
+export const drip = (cls = '') =>
+  `<div class="drip ${cls}" aria-hidden="true"><svg viewBox="0 0 1440 80" preserveAspectRatio="xMidYMin slice" focusable="false"><path d="${dripPath}" fill="currentColor"/></svg></div>`;
 
 export const logo = (cls = '') =>
   `<span class="logo ${cls}">${logoMark()}<span class="logo-word">snowcone</span></span>`;
@@ -57,7 +80,10 @@ export const button = (label, url = site.bookingUrl, variant = 'accent', extra =
 
 export const auditButton = (variant = 'accent', extra = '') => button('Book My Growth Audit', site.bookingUrl, variant, extra);
 
-export const stars = '<span class="stars" aria-label="5 out of 5 stars">★★★★★</span>';
+export const stars = (n = 5) => {
+  const full = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+  return `<span class="stars" role="img" aria-label="${full} out of 5 stars">${'★'.repeat(full)}<span class="stars__off" aria-hidden="true">${'★'.repeat(5 - full)}</span></span>`;
+};
 
 // Google rating badge. Without a real score it renders nothing, or with
 // `fallback` the site badge text (used in the hero).
@@ -65,7 +91,7 @@ export const ratingBadge = (variant = 'dark', { fallback = false } = {}) => {
   if (site.rating.score)
     return `
   <a class="rating rating--${variant}" href="${site.rating.url || '#'}"${linkAttrs(site.rating.url)}>
-    <span class="rating__top">${icons.google(16)}${stars}</span>
+    <span class="rating__top">${icons.google(16)}${stars(site.rating.score)}</span>
     <span class="rating__text">${site.rating.score} ${site.rating.label}</span>
   </a>`;
   return fallback && site.badge
@@ -95,56 +121,40 @@ export const sectionHead = (eyebrow, title, extra = '') => `
 
 // ── Shared sections ──────────────────────────────────────────────────────────
 
-// Real Google reviews when there are some; until then, Snowcone's promises
-// in the same card layout.
+// Real Google reviews. The section only appears once there's at least one.
 const reviewCard = (r) => `
       <article class="review-card">
-        <div class="review-card__top">${stars}${icons.google()}</div>
+        <div class="review-card__top">${stars(r.stars ?? 5)}${icons.google()}</div>
         <p class="review-card__text">${r.text}</p>
         <div class="review-card__by">
           <span class="avatar" aria-hidden="true">${r.name.trim()[0]}</span>
-          <span><strong>${r.name}</strong><small>${r.when}</small></span>
+          <span><strong>${r.name}</strong><small>${r.when || ''}</small></span>
         </div>
       </article>`;
 
-const promiseCard = (text) => `
-      <article class="review-card review-card--promise">
-        <div class="review-card__top">${logoMark(28)}</div>
-        <p class="review-card__text">${text}</p>
-        <div class="review-card__by">
-          <span class="avatar" aria-hidden="true">S</span>
-          <span><strong>The Snowcone Promise</strong><small>To every client, from day one</small></span>
-        </div>
-      </article>`;
-
-export const reviewsSection = ({ id = 'reviews' } = {}) => {
-  const hasReviews = reviews.length > 0;
-  return `
+export const reviewsSection = ({ id = 'reviews' } = {}) =>
+  !reviews.length
+    ? ''
+    : `
 <section class="section reviews" id="${id}">
   <div class="container">
     <div class="center-head reveal">
-      ${hasReviews ? ratingBadge('light') : ''}
+      ${ratingBadge('light')}
       <h2 class="h2 h2--xl">Did Someone Order Extra Syrup On That <em>ROI?</em></h2>
-      <p class="lead">${
-        hasReviews
-          ? 'Don’t take our word for it. Here’s what happens when ambitious founders meet a growth partner who actually delivers.'
-          : 'Good marketing should feel like a treat, not a gamble. Here’s the deal we make with every client.'
-      }</p>
-      ${auditButton('primary')}
+      <p class="lead">Don’t take our word for it. Here’s what our clients say.</p>
     </div>
   </div>
   <div class="slider" data-slider>
     <div class="slider__track container" data-track>
-      ${hasReviews ? reviews.map(reviewCard).join('') : promises.map(promiseCard).join('')}
+      ${reviews.map(reviewCard).join('')}
     </div>
-    ${sliderControls(hasReviews ? 'reviews' : 'promises')}
+    ${sliderControls('reviews')}
   </div>
 </section>`;
-};
 
 export const sliderControls = (noun = '') => `
     <div class="slider__controls container">
-      <div class="slider__status"><span data-status>Showing ${noun ? noun + ' ' : ''}1 of 1</span><span class="slider__bar"><span data-bar></span></span></div>
+      <div class="slider__status"><span data-status data-noun="${noun}">Showing ${noun ? noun + ' ' : ''}1 of 1</span><span class="slider__bar"><span data-bar></span></span></div>
       <div class="slider__btns">
         <button class="icon-btn" data-prev aria-label="Previous">${icons.chevronLeft()}</button>
         <button class="icon-btn" data-next aria-label="Next">${icons.chevron()}</button>
@@ -191,7 +201,7 @@ export const auditSection = () => `
         ['Competitor Visibility Analysis', 'See which competitors are outranking you, outspending you and how to take their position.'],
         ['Your Quick-Win Action Plan', 'A clear, prioritised list of the fastest fixes to get more enquiries coming in.'],
       ]
-        .map(([t, d]) => `<li>${icons.check()}<div><h3>${t}</h3><p>${d}</p></div></li>`)
+        .map(([t, d]) => `<li>${icons.drop(20)}<div><h3>${t}</h3><p>${d}</p></div></li>`)
         .join('')}
     </ul>
     ${auditButton()}
@@ -206,9 +216,9 @@ export const planSection = (items, service) => `
     <h2 class="h2 h2--xl">Book The Audit, Walk Away With A <em>Plan</em></h2>
     <p class="lead">Even if we never work together, you’ll leave this call knowing:</p>
     <ul class="audit__list audit__list--compact">
-      ${items.map((t) => `<li>${icons.check()}<div><h3>${t}</h3></div></li>`).join('')}
+      ${items.map((t) => `<li>${icons.drop(20)}<div><h3>${t}</h3></div></li>`).join('')}
     </ul>
-    <p class="audit__note">We only take on a handful of new clients each month, so we can give each one the attention it takes to deliver.</p>
+    ${site.planNote ? `<p class="audit__note">${site.planNote}</p>` : ''}
     ${auditButton()}
   </div>
 </section>`;
@@ -271,7 +281,7 @@ const footer = () => `
         }
       </div>
       <div class="footer__brand">${logo('logo--xl')}</div>
-      <p class="footer__legal">© ${site.legalName} ${new Date().getFullYear()}. All Rights Reserved</p>
+      <p class="footer__legal"><span>© ${site.legalName} ${new Date().getFullYear()}. All rights reserved.</span><span>Served fresh in Australia ${logoMark(16)}</span></p>
     </div>
   </div>
 </footer>`;

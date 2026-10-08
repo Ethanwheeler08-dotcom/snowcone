@@ -71,12 +71,14 @@ writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${ba
 console.log(`Built ${Object.keys(pages).length} pages into ${out}`);
 
 // Remind whoever runs the build what's still placeholder.
-const todos = readFileSync('src/config.mjs', 'utf8')
-  .split('\n')
-  .map((line, i) => [i + 1, line])
-  .filter(([, line]) => /\/\/ TODO/.test(line));
+const todos = ['src/config.mjs', 'src/data/services.mjs'].flatMap((file) =>
+  readFileSync(file, 'utf8')
+    .split('\n')
+    .map((line, i) => [`${file}:${i + 1}`, line])
+    .filter(([, line]) => /\/\/ TODO/.test(line)),
+);
 if (todos.length) {
-  console.log(`\n${todos.length} item(s) to confirm in src/config.mjs:`);
-  for (const [n, line] of todos) console.log(`  line ${n}: ${line.trim().slice(0, 100)}`);
+  console.log(`\n${todos.length} item(s) to confirm:`);
+  for (const [where, line] of todos) console.log(`  ${where}  ${line.trim().slice(0, 90)}`);
 }
 if (site.draft) console.log('\nsite.draft is true, so pages show a "Draft preview" ribbon.');

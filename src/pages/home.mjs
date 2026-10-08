@@ -1,7 +1,7 @@
 import { site, marquee, results, press, caseStudies, industries } from '../config.mjs';
 import { services, homeServiceStart } from '../data/services.mjs';
 import {
-  page, icons, auditButton, button, ratingBadge, media, sliderControls, statList,
+  page, icons, auditButton, button, ratingBadge, media, sliderControls, statList, logoMark, drip,
   reviewsSection, faqList, personalitySection, auditSection,
 } from '../layout.mjs';
 
@@ -15,40 +15,40 @@ const stepIcon = {
 };
 
 const method = [
-  ['inspect', 'Inspect', 'We get under the hood', 'Before we touch a single campaign, we dig into your full digital presence — your ads, your website, your search visibility and your competitors. We find out exactly where you’re losing leads and why. Most clients discover something at this stage they didn’t know was costing them enquiries.'],
-  ['plan', 'Plan', 'We write the recipe', 'With the gaps mapped, we build a growth plan around your numbers: which channels to back, what to spend, and what success looks like at 30, 60 and 90 days. You sign off before anything goes live.'],
-  ['build', 'Build', 'We lay the foundations', 'Tracking, landing pages, audiences and creative. We build the plumbing properly first, so every result from here on is measured and attributed, not guessed.'],
-  ['launch', 'Launch', 'We go live', 'Campaigns go out with clear tests baked in. You get live access to your dashboard from day one, so you can watch what’s happening as it happens.'],
-  ['optimise', 'Optimise', 'We sharpen every week', 'We cut what isn’t working, double down on what is, and report back in plain English. No vanity metrics, no mystery, no disappearing acts.'],
-  ['scale', 'Scale', 'We pour on the syrup', 'Once the numbers hold, we scale spend and expand channels with confidence, compounding your growth without blowing out your cost-per-lead.'],
+  ['inspect', 'Inspect', 'We get under the hood', 'Before we touch a single campaign, we go through everything. Your ads, your website, how you show up in search, and what your competitors are up to. We work out where you’re losing leads and why. This is often where we find something that’s been quietly costing you enquiries.'],
+  ['plan', 'Plan', 'We write the recipe', 'Then we build a plan around your numbers. Which channels to back, what to spend, and what good looks like at 30, 60 and 90 days. You sign off before anything goes live.'],
+  ['build', 'Build', 'We lay the foundations', 'Tracking, landing pages, audiences and creative. We get the plumbing right first, so every result after this gets measured properly instead of guessed.'],
+  ['launch', 'Launch', 'We go live', 'Campaigns go out with clear tests built in. Your dashboard is live from day one, so you can see what’s happening as it happens.'],
+  ['optimise', 'Optimise', 'We sharpen it every week', 'We cut what isn’t working and back what is. Then we tell you about it in plain English.'],
+  ['scale', 'Scale', 'We pour on the syrup', 'Once the numbers hold up, we spend more and add channels, without blowing out your cost per lead.'],
 ];
 
 const homeFaqs = [
-  ['We’ve Been Burned By An Agency Before. What Makes Snowcone Different?', 'You get live access to your accounts and data, straight answers every week, and a senior team that actually does the work. We tell you what’s working and what isn’t, and we earn your business every month instead of hiding behind a lock-in.'],
-  ['What Does It Actually Cost To Work With You?', 'It depends on the channels and the scope. After your free growth audit we’ll give you a clear monthly fee with no hidden extras, so you know exactly what you’re paying for before you commit.'],
-  ['How Quickly Will We See Results?', 'Paid channels like Google and Meta usually show meaningful movement within the first few weeks. SEO is a longer game, typically three to six months. We’ll set realistic expectations for your business in the audit.'],
-  ['Are We Locked Into A Long Contract?', 'No. We’ll recommend a sensible starting term for your goals, but we’d rather keep you with results than with a contract.'],
-  ['We Don’t Have A Big Internal Marketing Team. Can You Work With That?', 'Absolutely. Most of the businesses we work with don’t. We act as an extension of your team, handling the strategy and the execution so you can get on with running the business.'],
+  ['We’ve Been Burned By An Agency Before. What Makes Snowcone Different?', 'You can see your accounts and your data whenever you like, and the people you talk to are the people doing the work. We tell you what’s working and what isn’t, and we show our working on every decision.'],
+  ['What Does It Actually Cost To Work With You?', 'It depends on the channels and how much there is to do. After your free audit we’ll send a clear proposal with the scope and the fee spelled out, so there are no surprises later.'],
+  ['How Quickly Will We See Results?', 'Google and Meta ads can start bringing in enquiries within the first few weeks. SEO takes longer, usually three to six months before it really moves. We’ll give you realistic timeframes for your business in the audit.'],
+  ['What Happens After The Free Audit?', 'We walk you through what we found and what we’d fix first. If it makes sense to work together, we’ll put together a proposal with the scope, timeline and costs. If not, the plan is still yours to keep.'],
+  ['We Don’t Have A Big Internal Marketing Team. Can You Work With That?', 'Absolutely. Most service businesses don’t, and that’s exactly who we’re built for. We handle the strategy and the doing, so you can get on with running the business.'],
 ];
 
 const goodFit = [
-  'You’re spending on ads but can’t clearly trace where your leads are coming from.',
-  'You’ve worked with an agency before and left feeling like an invoice, not a priority.',
-  'You have a real revenue target, not a vague aspiration, and you need a strategy to hit it.',
-  'You want transparent reporting, not a monthly PDF that raises more questions than it answers.',
-  'You’re ready to back the process, not just the campaign.',
+  'You’re spending on ads but can’t say for sure where your leads come from.',
+  'You’ve used an agency before and felt more like an invoice than a priority.',
+  'You’ve got a real revenue target and need a plan to hit it.',
+  'You want reporting you can actually understand.',
+  'You’re ready to give a good strategy the time it needs to work.',
 ];
 
 const logoItem = (l) =>
-  `<li>${l.src ? `<img src="${l.src}" alt="${l.name}" loading="lazy">` : `<span class="wordmark">${l.name}</span>`}</li>`;
+  `<li>${l.src ? `<img src="${l.src}" alt="${l.name}" loading="lazy">` : `<span class="wordmark">${l.name}</span>`}</li><li class="marquee__cone" aria-hidden="true">${logoMark(18)}</li>`;
 
 const hero = `
 <section class="hero">
   <div class="container hero__inner">
     <div class="reveal">${ratingBadge('dark', { fallback: true })}</div>
-    <p class="hero__kicker reveal">We turn service businesses into <em>Lead Machines</em><br> with the data to prove it</p>
-    <h1 class="h1 reveal">Generating Leads For Brands With Flavour</h1>
-    <p class="hero__sub reveal">We’re a growth marketing agency for service businesses who are done watching their ad spend melt away into nothing.</p>
+    <p class="hero__kicker reveal">We turn service businesses into <em>Lead Machines</em><br> and show you the numbers behind every lead</p>
+    <h1 class="h1 reveal">Generating Leads For Brands With <em class="squiggle">Flavour</em></h1>
+    <p class="hero__sub reveal">We’re a growth marketing agency for service businesses that are sick of watching their ad spend melt.</p>
     <div class="btn-row reveal">
       ${auditButton()}
       ${button(caseStudies.length ? 'See Our Results' : 'See How We Work', caseStudies.length ? '/#case-studies' : '/#method', 'ghost-light')}
@@ -61,7 +61,8 @@ const hero = `
       <ul class="marquee__track" aria-hidden="true">${marquee.items.map(logoItem).join('')}</ul>
     </div>
   </div>
-</section>`;
+</section>
+${drip()}`;
 
 const whoWeHelp = `
 <section class="section who">
@@ -77,9 +78,9 @@ const whoWeHelp = `
     <div class="split split--media">
       ${media('', 'Service business owners working with Snowcone', 'reveal')}
       <div class="fit reveal">
-        <p class="fit__title"><em>You’re Probably A Good Fit If:</em></p>
-        <ul class="checklist">${goodFit.map((t) => `<li>${icons.check(18)}<span>${t}</span></li>`).join('')}</ul>
-        <p>If that sounds like your world, we should talk.</p>
+        <p class="fit__title"><em>You’re probably a good fit if</em></p>
+        <ul class="checklist">${goodFit.map((t) => `<li>${icons.drop(18)}<span>${t}</span></li>`).join('')}</ul>
+        <p>If that sounds like you, let’s talk.</p>
         ${auditButton('primary')}
       </div>
     </div>
@@ -127,13 +128,14 @@ const resultsSection = `
       ${statList(results.items)}
     </div>
   </div>
-</section>`;
+</section>
+${drip()}`;
 
 const serviceCards = `
 <section class="section services-show" id="services">
   <div class="container center-head reveal">
+    <p class="script">Pick your flavour</p>
     <h2 class="h2 h2--lg">Our Services</h2>
-    ${auditButton()}
   </div>
   <div class="coverflow" data-coverflow data-start="${homeServiceStart}">
     <div class="tabs container" role="tablist" aria-label="Services">
@@ -198,7 +200,6 @@ const industriesSection = `
       <p class="script">Who We Grow</p>
       <h2 class="h2 h2--xl">Built For Service Businesses</h2>
       <p class="lead">Every industry has its own buying cycle, margins and objections. Here’s where we’d start with yours.</p>
-      ${auditButton('primary')}
     </div>
     <div class="case-tabs" data-tabs>
       <div class="pill-tabs" role="tablist" aria-label="Industries">
@@ -262,15 +263,15 @@ const methodSection = `
       <div class="method__dashes">${method.map((_, i) => `<span data-dash="${i}"></span>`).join('')}</div>
     </div>
   </div>
-</section>`;
+</section>
+${drip()}`;
 
 const faqSection = `
 <section class="section faq-section">
   <div class="container split split--faq">
     <div class="reveal">
       <h2 class="h2">The Questions Businesses Always Ask Us First</h2>
-      <p class="lead lead--dark">We’d rather answer them here than leave you wondering.</p>
-      ${auditButton('primary')}
+      <p class="lead lead--dark">We’d rather answer them here than leave you wondering. Got another one? Email <a href="mailto:${site.email}">${site.email}</a>.</p>
     </div>
     <div class="reveal">${faqList(homeFaqs)}</div>
   </div>
@@ -278,9 +279,9 @@ const faqSection = `
 
 const about = personalitySection({
   text: `
-        <p>${site.name} was founded by marketers who got tired of watching good businesses get mediocre results from agencies more interested in their own retainer than their clients’ growth. So we built the antidote.</p>
-        <p>We embed ourselves in your data, your culture and your goals. We tell you the truth about what’s working, and what isn’t. We bring sharper thinking, AI and automation to every account. And we treat every client like a partner, not an account number, because that’s the only way the work ever gets really good.</p>
-        <p>No bland thinking. No recycled campaigns. No disappearing acts. Just growth with serious flavour.</p>`,
+        <p>${site.name} is a growth marketing agency for service businesses. We dig into your numbers, learn how your business actually makes money, and build the marketing around that.</p>
+        <p>You’ll always know what’s working and what isn’t, because we’ll tell you. We look after your budget like it’s our own, and we care how things turn out for you.</p>
+        <p>No bland thinking. No recycled campaigns. No disappearing acts.</p>`,
 });
 
 export default () =>

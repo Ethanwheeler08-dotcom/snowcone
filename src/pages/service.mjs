@@ -1,4 +1,4 @@
-import { results } from '../config.mjs';
+import { site, results } from '../config.mjs';
 import { page, icons, auditButton, button, statList, faqList, personalitySection, planSection } from '../layout.mjs';
 
 export default (s) => {
@@ -14,7 +14,7 @@ export default (s) => {
     </div>
     <hr class="rule">
     <div class="svc-hero__visual reveal" aria-hidden="true">
-      <span class="svc-hero__icon">${icons[s.icon](120)}</span>
+      <span class="svc-hero__icon">${icons[s.icon](96)}</span>
       <span class="svc-hero__label">${s.label}</span>
     </div>
   </div>
@@ -25,20 +25,25 @@ export default (s) => {
   <div class="container">
     <h2 class="h2 h2--lg reveal">${results.serviceTitle}</h2>
     <hr class="rule">
-    <div class="reveal">${statList(results.items, 'stats--plain')}</div>
+    <div class="reveal">${statList(s.results ?? results.items, 'stats--plain')}</div>
   </div>
 </section>`;
 
-  const block = (eyebrow, data, id = '') => `
-<section class="section text-block"${id ? ` id="${id}"` : ''}>
-  <div class="container">
-    <p class="eyebrow eyebrow--primary align-right reveal">${eyebrow}</p>
-    <hr class="rule">
-    <div class="text-block__body reveal">
-      <h2 class="h2 h2--lg">${data.title}</h2>
-      <p class="lead lead--dark">${data.text}</p>
-      ${auditButton('primary')}
-    </div>
+  // The problem and the fix, side by side.
+  const problemFix = `
+<section class="section ps" id="what-we-do">
+  <div class="container ps__grid">
+    <article class="ps__card ps__card--problem reveal">
+      <p class="eyebrow eyebrow--primary">The Problem</p>
+      <h2 class="h2">${s.problem.title}</h2>
+      <p>${s.problem.text}</p>
+    </article>
+    <article class="ps__card ps__card--fix reveal">
+      <p class="eyebrow eyebrow--accent">What We Do</p>
+      <h2 class="h2">${s.solution.title}</h2>
+      <p>${s.solution.text}</p>
+      ${auditButton()}
+    </article>
   </div>
 </section>`;
 
@@ -67,7 +72,7 @@ export default (s) => {
     <div class="reveal">
       <h2 class="h2">Your Questions, <em>Answered</em></h2>
       <p class="lead lead--dark">${s.faqIntro}</p>
-      ${button('Contact Us', '#book', 'primary')}
+      ${button('Ask Us Directly', `mailto:${site.email}`, 'primary')}
     </div>
     <div class="reveal">${faqList(s.faqs, 0)}</div>
   </div>
@@ -79,10 +84,9 @@ export default (s) => {
     description: s.hero.text,
     body: [
       hero,
-      trusted,
-      block('The Problem', s.problem),
-      block('What We Do', s.solution, 'what-we-do'),
+      problemFix,
       steps,
+      trusted,
       personalitySection({ text: `<p>${s.why}</p>`, eyebrow: 'Why Us?', id: 'why-us' }),
       faq,
       planSection(s.audit, s),

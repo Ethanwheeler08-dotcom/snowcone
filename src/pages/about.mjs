@@ -1,12 +1,12 @@
 import { founder, team, values, techStack } from '../config.mjs';
-import { page, icons, auditButton, media, reviewsSection, auditSection } from '../layout.mjs';
+import { page, icons, auditButton, media, sectionHead, reviewsSection, auditSection } from '../layout.mjs';
 
 const hero = `
 <section class="about-hero">
   ${media('', 'The Snowcone team', 'about-hero__bg')}
   <div class="container about-hero__inner">
     <h1 class="about-hero__title reveal"><span>Performance</span><span>With <em>Personality</em></span></h1>
-    <p class="about-hero__text reveal">We’re the growth agency that gets service businesses the one thing that actually matters. More enquiries.</p>
+    <p class="about-hero__text reveal">We’re the growth agency that gets service businesses the one thing that really matters. More enquiries.</p>
   </div>
 </section>`;
 
@@ -19,7 +19,9 @@ const story = `
         ${media(founder.photo, founder.name, 'founder__photo')}
         <figcaption>${
           founder.name
-            ? `<span class="script script--primary">${founder.name}</span><small>${founder.role}</small>`
+            ? `<span class="script script--primary">${founder.name}</span><small>${founder.role}${
+                founder.linkedin ? ` · <a href="${founder.linkedin}" target="_blank" rel="noopener">LinkedIn</a>` : ''
+              }</small>`
             : '<span class="script script--primary">Snowcone</span><small>Growth marketing for service businesses</small>'
         }</figcaption>
       </figure>
@@ -59,7 +61,7 @@ const valuesSection = team.length
   : `
 <section class="section values">
   <div class="container">
-    <div class="section-head reveal"><h2 class="h2 h2--lg">What We <em>Stand For</em></h2>${auditButton('primary')}</div>
+    ${sectionHead('Our values', 'What We <em>Stand For</em>')}
     <ul class="values__grid">
       ${values
         .map(
@@ -77,8 +79,21 @@ const valuesSection = team.length
 const stack = `
 <section class="section stack">
   <div class="container">
-    <h2 class="h2 h2--lg center reveal">Modern Tech Stack</h2>
-    <ul class="stack__grid reveal">${techStack.map((t) => `<li><span class="wordmark">${t}</span></li>`).join('')}</ul>
+    ${sectionHead('The tools behind the work', 'Modern Tech <em>Stack</em>')}
+    <p class="lead lead--dark stack__lead reveal">Good tools don’t make good marketing. But they do mean every lead gets tracked, every dollar gets traced and nothing slips through the cracks.</p>
+    <ul class="stack__grid">
+      ${techStack
+        .map(
+          (g) => `
+      <li class="stack-card reveal">
+        <span class="stack-card__icon">${icons[g.icon](22)}</span>
+        <h3 class="stack-card__title">${g.group}</h3>
+        <p>${g.blurb}</p>
+        <ul class="chips">${g.tools.map((t) => `<li>${t}</li>`).join('')}</ul>
+      </li>`,
+        )
+        .join('')}
+    </ul>
   </div>
 </section>`;
 

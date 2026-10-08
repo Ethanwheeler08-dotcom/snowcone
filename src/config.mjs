@@ -21,7 +21,7 @@ export const site = {
   name: 'Snowcone',
   legalName: 'Snowcone Marketing',
   url: 'https://snowcone.com.au', // TODO: confirm domain (used for canonical + social tags)
-  title: 'Snowcone — Growth Marketing With Serious Flavour',
+  title: 'Snowcone | Growth Marketing With Serious Flavour',
   description:
     'Growth marketing agency for service businesses across Australia. Sharp strategy, standout creative and results you can measure. Nothing watered down.',
 
@@ -47,10 +47,14 @@ export const site = {
   badge: 'Now booking free growth audits',
 
   auditValue: '100% free, no strings attached',
+
+  // Closing line on each service page. Leave empty to hide it.
+  planNote: 'We only take on a handful of new clients each month, so we can give each one the attention it takes to deliver.', // TODO: confirm
 };
 
 // Hero marquee. Shows the channels Snowcone works across. Once clients have
-// agreed to be named, swap in their logos: { name: 'Client', src: '/assets/img/clients/client.svg' }.
+// agreed to be named, swap in their logos: { name: 'Client', src: '/assets/img/clients/client.svg' },
+// and change the heading too, e.g. 'Trusted By Brands Who Came For More'.
 export const marquee = {
   heading: 'Growth Across Every Channel Your Customers Use',
   items: ['Google Search', 'Google Maps', 'YouTube', 'Facebook', 'Instagram', 'LinkedIn', 'TikTok', 'ChatGPT', 'Email'].map(
@@ -60,18 +64,20 @@ export const marquee = {
 
 // Home page numbers card and the band near the top of each service page.
 // These are commitments, so only keep the ones Snowcone will stand behind.
-// When there are real client results, replace them, e.g. { value: '$2.4M', label: 'Revenue generated for clients' }.
-// Values count up on scroll when `count` is true.
+// When there are real client results, replace them, e.g. { value: '$2.4M', count: true, label: 'Revenue generated for clients' },
+// and update the wording to match: eyebrow 'Our Results', a lead such as 'Every result
+// below is real and attributed', and serviceTitle 'Trusted By Service Businesses Across <em>Australia</em>'.
+// Values count up on scroll when `count` is true. The website and strategy pages
+// have their own list (`results` in src/data/services.mjs).
 export const results = {
   eyebrow: 'Our Promise',
   title: 'The Numbers Don’t Lie. Neither Do We.',
-  lead: 'We graph what we do, and you see every number we see. Here’s what that looks like from day one.',
+  lead: 'We track everything we do, and you see every number we see. From the first week.',
   serviceTitle: 'What Every Snowcone Client <em>Gets</em>',
   items: [
-    { value: '100%', count: true, label: 'Ownership of your ad accounts, data and creative' }, // TODO: confirm
-    { value: '24/7', label: 'Live dashboard access to every campaign' }, // TODO: confirm
-    { value: 'Weekly', label: 'Plain-English updates on what changed and why' }, // TODO: confirm
-    { value: '0', label: 'Lock-in contracts. We earn the next month.' }, // TODO: confirm
+    { value: '100%', count: true, label: 'Of your ad accounts, data and creative stay in your name' }, // TODO: confirm
+    { value: '24/7', label: 'Access to a live dashboard of every campaign' }, // TODO: confirm
+    { value: 'Weekly', label: 'Updates in plain English on what we changed and why' }, // TODO: confirm
   ],
 };
 
@@ -159,28 +165,21 @@ export const industries = [
 ];
 
 // Google reviews, copied word for word, e.g.
-// { text: 'Review text…', name: 'Reviewer name', when: '2 months ago' }.
-// While this is empty, the reviews section shows Snowcone's promises instead.
+// { text: 'Review text…', name: 'Reviewer name', when: '2 months ago', stars: 5 }.
+// The reviews section (home and About) only appears once there's at least one.
 export const reviews = [];
 
-export const promises = [
-  'You’ll always know what your money did, because you see the same dashboard we do.',
-  'You own your ad accounts, your data and your creative. If we ever part ways, it all stays with you.',
-  'We’ll tell you when something isn’t working before you have to ask.',
-  'Every recommendation comes with the reasoning behind it, in plain English.',
-  'No lock-in contracts. If we’re not earning our keep, you’re free to go.',
-];
-
-// About page story. Add a name and photo to turn it into a founder profile.
+// About page story. Add a name and photo to turn it into a founder profile
+// (the label switches to 'About The Founder'); rewrite the bio in their voice too.
 export const founder = {
   name: '',
   role: '',
   photo: '', // e.g. '/assets/img/team/founder.jpg'
   linkedin: '',
   bio: [
-    'Snowcone started because we got tired of watching good businesses get mediocre results. Too many agencies cared more about their own retainer than their clients’ growth.',
-    'You know the type. Recycled campaigns. Reports full of numbers that look impressive and mean nothing. A monthly call where nobody can quite tell you what your money did. We knew there was a better way to run an agency, so we built one.',
-    'No watered-down partnerships. No melted marketing. Just sharp thinking, straight answers, and growth with serious flavour.',
+    'Snowcone started because we got sick of watching good businesses get average results from agencies that cared more about the retainer than the result.',
+    'You’ve probably met them. Recycled campaigns. Reports full of big numbers that don’t mean much. A monthly call where nobody can tell you what your money actually did.',
+    'So we built the agency we’d want to hire ourselves. Clear thinking, plain English, and nothing watered down.',
   ],
 };
 
@@ -189,13 +188,21 @@ export const founder = {
 export const team = [];
 
 export const values = [
-  ['Straight answers', 'If something isn’t working, you’ll hear it from us first, along with what we’re doing about it.'],
-  ['Your accounts, your data', 'Everything we build in your name stays in your name. No hostage ad accounts.'],
-  ['Senior thinking', 'Strategy comes from people who’ve done it before, not from a template.'],
-  ['Test, learn, repeat', 'Every campaign ships with a hypothesis, and every result feeds the next one.'],
-  ['Creative with a job', 'Good-looking isn’t enough. Every ad, page and email has to earn its place.'],
-  ['Partners, not vendors', 'We care about the outcome the way you do, and we stick around to improve it.'],
+  ['Straight talk', 'If something isn’t working, you’ll hear it from us first. Then we’ll tell you what we’re doing about it.'],
+  ['Your accounts stay yours', 'Ad accounts, tracking and creative get set up in your name. Nobody’s holding anything hostage.'],
+  ['Built around your numbers', 'Every plan starts with your margins and your goals. We don’t copy and paste from the last client.'],
+  ['Test, learn, repeat', 'Each campaign goes out with something to prove, and whatever we learn goes into the next one.'],
+  ['Creative that works for a living', 'Looking good is the easy part. Every ad, page and email has a job to do.'],
+  ['In it for the long haul', 'We care where your business is in a year’s time, and we stick around to help get it there.'],
 ];
 
-// About page "Modern Tech Stack": the platforms behind the services.
-export const techStack = ['Google Ads', 'Meta Ads', 'LinkedIn Ads', 'Google Analytics 4', 'Tag Manager', 'Search Console', 'Looker Studio']; // TODO: confirm
+// About page "Modern Tech Stack": the tools behind the services, grouped by job.
+// TODO: confirm these are the tools Snowcone actually uses
+export const techStack = [
+  { group: 'Advertising', icon: 'megaphone', blurb: 'Where your campaigns run and your ad budget gets managed.', tools: ['Google Ads', 'Meta Ads Manager', 'LinkedIn Campaign Manager'] },
+  { group: 'Tracking & reporting', icon: 'chart', blurb: 'How every lead gets counted and every dollar gets traced.', tools: ['Google Analytics 4', 'Google Tag Manager', 'Looker Studio'] },
+  { group: 'Search', icon: 'search', blurb: 'How we find what people are searching for, then get you found.', tools: ['Google Search Console', 'Google Business Profile', 'Semrush'] },
+  { group: 'Email & CRM', icon: 'mail', blurb: 'Where follow-ups, nurture flows and lead lists live.', tools: ['Klaviyo', 'Mailchimp', 'HubSpot'] },
+  { group: 'Websites', icon: 'web', blurb: 'What we build fast, easy-to-edit sites on.', tools: ['WordPress', 'Webflow', 'Cloudflare'] },
+  { group: 'Creative', icon: 'brush', blurb: 'Where the ads, landing pages and short videos get made.', tools: ['Figma', 'Canva', 'CapCut'] },
+];

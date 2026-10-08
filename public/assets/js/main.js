@@ -69,20 +69,25 @@
     const next = $('[data-next]', slider);
     const status = $('[data-status]', slider);
     const bar = $('[data-bar]', slider);
-    const noun = status.textContent.replace(/\s*1 of 1$/, '').trim();
+    const noun = status.dataset.noun ? `${status.dataset.noun} ` : '';
     const step = () => (track.firstElementChild?.getBoundingClientRect().width || 300) + 16;
+    // Status shows which cards are fully in view, e.g. "Showing reviews 1–3 of 5".
     const update = () => {
       const max = track.scrollWidth - track.clientWidth;
-      const cards = track.children.length;
-      const perView = Math.max(1, Math.round(track.clientWidth / step()));
-      const pages = Math.max(1, cards - perView + 1);
-      const page = max <= 0 ? 1 : Math.min(pages, Math.round((track.scrollLeft / max) * (pages - 1)) + 1);
-      status.textContent = `${noun} ${page} of ${pages}`.trim();
-      const w = 100 / pages;
-      bar.style.width = `${w}%`;
-      bar.style.transform = `translateX(${(page - 1) * 100}%)`;
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= max - 2;
+      const box = track.getBoundingClientRect();
+      const cards = [...track.children];
+      const inView = cards
+        .map((c, i) => [c.getBoundingClientRect(), i])
+        .filter(([r]) => r.left >= box.left - 2 && r.right <= box.right + 2)
+        .map(([, i]) => i + 1);
+      const first = inView[0] ?? 1;
+      const last = inView[inView.length - 1] ?? first;
+      const n = cards.length;
+      status.textContent = `Showing ${noun}${first === last ? first : `${first}–${last}`} of ${n}`;
+      bar.style.width = `${((last - first + 1) / n) * 100}%`;
+      bar.style.transform = `translateX(${((first - 1) / (last - first + 1)) * 100}%)`;
+      prev.disabled = first === 1 || track.scrollLeft <= 2;
+      next.disabled = last === n || track.scrollLeft >= max - 2;
     };
     prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
     next.addEventListener('click', () => track.scrollBy({ left: step() }));
@@ -130,8 +135,10 @@
         card.style.opacity = a > 1 ? 0 : 1;
         card.style.zIndex = 10 - a;
         card.style.pointerEvents = a > 1 ? 'none' : '';
-        card.inert = a !== 0;
         card.style.cursor = a === 1 ? 'pointer' : '';
+        // only the centre card is readable/focusable; neighbours stay clickable
+        card.setAttribute('aria-hidden', a !== 0);
+        $$('a', card).forEach((link) => (link.tabIndex = a === 0 ? 0 : -1));
       });
       tabs.forEach((t, i) => t.setAttribute('aria-selected', i === current));
     };
@@ -140,19 +147,41 @@
       layout();
     };
     tabs.forEach((t, i) => t.addEventListener('click', () => go(i)));
-    // click a tilted neighbour to bring it to the centre
-    cards.forEach((c, i) => c.parentElement.addEventListener('click', (e) => {
-      if (e.target.closest('[data-card]') === c && i !== current) go(i);
-    }));
-    let x0 = null;
+    // Swipe or drag sideways to move; click a tilted neighbour to bring it to the centre.
     const stage = $('.coverflow__stage', root);
-    stage.addEventListener('pointerdown', (e) => (x0 = e.clientX));
+    let x0 = null;
+    let swiped = false;
+    stage.addEventListener('pointerdown', (e) => {
+      x0 = e.clientX;
+      swiped = false;
+    });
+    stage.addEventListener('pointercancel', () => (x0 = null));
     stage.addEventListener('pointerup', (e) => {
       if (x0 === null) return;
       const dx = e.clientX - x0;
-      if (Math.abs(dx) > 40) go(current + (dx < 0 ? 1 : -1));
       x0 = null;
+      if (Math.abs(dx) > 40) {
+        swiped = true;
+        go(current + (dx < 0 ? 1 : -1));
+      }
     });
+    stage.addEventListener('dragstart', (e) => e.preventDefault());
+    stage.addEventListener(
+      'click',
+      (e) => {
+        const i = cards.indexOf(e.target.closest('[data-card]'));
+        if (swiped) {
+          // the click that ends a drag isn't a click on whatever is now under the pointer
+          swiped = false;
+          e.preventDefault();
+          e.stopPropagation();
+        } else if (i >= 0 && i !== current) {
+          e.preventDefault();
+          go(i);
+        }
+      },
+      true,
+    );
     addEventListener('resize', layout);
     layout();
   });
