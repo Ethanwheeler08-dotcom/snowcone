@@ -1,7 +1,7 @@
 import { site, marquee, results, press, caseStudies, industries } from '../config.mjs';
 import { services, homeServiceStart } from '../data/services.mjs';
 import {
-  page, icons, auditButton, button, ratingBadge, media, sliderControls, statList, logoMark, drip,
+  page, icons, auditButton, button, ratingBadge, media, sliderControls, statList, logoMark,
   reviewsSection, faqList, personalitySection, auditSection,
 } from '../layout.mjs';
 
@@ -61,8 +61,7 @@ const hero = `
       <ul class="marquee__track" aria-hidden="true">${marquee.items.map(logoItem).join('')}</ul>
     </div>
   </div>
-</section>
-${drip()}`;
+</section>`;
 
 const whoWeHelp = `
 <section class="section who">
@@ -128,8 +127,7 @@ const resultsSection = `
       ${statList(results.items)}
     </div>
   </div>
-</section>
-${drip()}`;
+</section>`;
 
 const serviceCards = `
 <section class="section services-show" id="services">
@@ -263,8 +261,7 @@ const methodSection = `
       <div class="method__dashes">${method.map((_, i) => `<span data-dash="${i}"></span>`).join('')}</div>
     </div>
   </div>
-</section>
-${drip()}`;
+</section>`;
 
 const faqSection = `
 <section class="section faq-section">

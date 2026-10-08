@@ -1,5 +1,5 @@
 import { services } from '../data/services.mjs';
-import { page, icons, auditButton, drip, auditSection } from '../layout.mjs';
+import { page, icons, auditButton, auditSection } from '../layout.mjs';
 
 const hero = `
 <section class="page-hero">
@@ -9,8 +9,7 @@ const hero = `
     <p class="hero__sub reveal">Six ways we help service businesses grow. You probably don’t need all of them. The free audit tells you which ones will make the biggest difference for you.</p>
     <div class="btn-row reveal">${auditButton()}</div>
   </div>
-</section>
-${drip()}`;
+</section>`;
 
 const list = `
 <section class="section svc-list">

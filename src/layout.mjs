@@ -48,24 +48,6 @@ export const logoMark = (size = 30) => `<svg class="logo-mark" width="${size}" h
   <path d="M16 3.6c3.4 0 6.4 1.5 8.3 3.9-2.6-1.4-5.4-1.9-8.6-.7-2.4.9-4.9.6-7-.4C10.6 4.7 13.2 3.6 16 3.6Z" fill="var(--scoop-hi)"/>
 </svg>`;
 
-// Syrup dripping off the bottom edge of a coloured section into the next one.
-// It's filled with the section's bottom colour (--drip in the CSS).
-const dripPath = (() => {
-  const base = 10;
-  // [centre x, half width, length]
-  const drips = [[70, 13, 34], [190, 9, 18], [330, 15, 52], [470, 8, 22], [610, 12, 40], [760, 16, 62], [905, 9, 24], [1040, 13, 44], [1180, 10, 28], [1330, 15, 50]];
-  let d = `M0 0H1440V${base}`;
-  for (const [cx, w, len] of [...drips].reverse()) {
-    const y = base + len;
-    d += `H${cx + w + 10}C${cx + w + 2} ${base} ${cx + w} ${base + 4} ${cx + w} ${base + 10}V${y - w}A${w} ${w} 0 0 1 ${cx - w} ${y - w}V${base + 10}C${cx - w} ${base + 4} ${cx - w - 2} ${base} ${cx - w - 10} ${base}`;
-  }
-  return `${d}H0Z`;
-})();
-
-// Place it straight after the section it drips from.
-export const drip = (cls = '') =>
-  `<div class="drip ${cls}" aria-hidden="true"><svg viewBox="0 0 1440 80" preserveAspectRatio="xMidYMin slice" focusable="false"><path d="${dripPath}" fill="currentColor"/></svg></div>`;
-
 export const logo = (cls = '') =>
   `<span class="logo ${cls}">${logoMark()}<span class="logo-word">snowcone</span></span>`;
 
